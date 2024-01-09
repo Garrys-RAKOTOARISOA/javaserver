@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 public class RelaisController {
     private final RelaisBatterieRepository relaisBatterieRepository;
     private final RelaisPriseRepository relaisPriseRepository;
-
     private final ModuleSolarRepository moduleSolarRepository;
 
     @Autowired
@@ -35,6 +34,7 @@ public class RelaisController {
         else{
             relais.setState(true);
         }
+        relaisBatterieRepository.save(relais);
         return "Switched batterie";
     }
 
@@ -48,6 +48,7 @@ public class RelaisController {
         else{
             relais.setState(true);
         }
+        relaisPriseRepository.save(relais);
         return "Switched prise";
     }
 }
