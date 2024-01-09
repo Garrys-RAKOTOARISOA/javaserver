@@ -8,6 +8,5 @@ import java.util.List;
 
 public interface RelaisPriseRepository extends CrudRepository<RelaisPrise, Long> {
     List<RelaisPrise> findAll();
-
     RelaisPrise findByModule(ModuleSolar moduleSolar);
 }
