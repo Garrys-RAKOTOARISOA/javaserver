@@ -1,11 +1,8 @@
     package com.example.demo5.controllers;
 
     import com.example.demo5.fonc.Fonction;
-    import com.example.demo5.models.ModuleSolar;
-    import com.example.demo5.models.PanneauData;
-    import com.example.demo5.models.PriseData;
-    import com.example.demo5.repositories.ModuleSolarRepository;
-    import com.example.demo5.repositories.PriseDataRepository;
+    import com.example.demo5.models.*;
+    import com.example.demo5.repositories.*;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.web.bind.annotation.*;
 
@@ -18,15 +15,21 @@
     public class PriseController {
         private final PriseDataRepository priseDataRepository;
         private final ModuleSolarRepository moduleSolarRepository;
+        private final PlanningPriseRepository planningPriseRepository;
+        private final RelaisPriseRepository relaisPriseRepository;
+        private final NotificationModuleRepository notificationModuleRepository;
 
         @Autowired
-        public PriseController(PriseDataRepository priseDataRepository, ModuleSolarRepository moduleSolarRepository){
+        public PriseController(PriseDataRepository priseDataRepository, ModuleSolarRepository moduleSolarRepository, PlanningPriseRepository planningPriseRepository, RelaisPriseRepository relaisPriseRepository, NotificationModuleRepository notificationModuleRepository){
             this.priseDataRepository = priseDataRepository;
             this.moduleSolarRepository = moduleSolarRepository;
+            this.planningPriseRepository = planningPriseRepository;
+            this.relaisPriseRepository = relaisPriseRepository;
+            this.notificationModuleRepository = notificationModuleRepository;
         }
 
         @GetMapping("/listeprisedatabyidmodule/{idmodule}")
-        public List<PriseData> listeDoonnee(@PathVariable("idmodule")Long idmodule) {
+        public List<PriseData> listeDonnee(@PathVariable("idmodule")Long idmodule){
             ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
             return priseDataRepository.findByModule(module);
         }
@@ -47,5 +50,47 @@
             priseData.setCourant(courant);
             priseData.setTemps(temps);
             priseDataRepository.save(priseData);
+            RelaisPrise relais = relaisPriseRepository.findByModule(module);
+            List<PlanningPrise> listeprise = planningPriseRepository.findAllByOrderByDatedebutAsc();
+            for (int i=0; i<listeprise.size(); i++){
+                if(!listeprise.get(i).getDone()){
+                    if(listeprise.get(i).getDatedebut().equals(temps)){
+                        if(relais.getState()){
+                            NotificationModule notification = new NotificationModule();
+                            notification.setTexte("le relais prise a ete eteint/allumee");
+                            notification.setTemps(temps);
+                            notificationModuleRepository.save(notification);
+                            relais.setState(false);
+                        }
+                        else{
+                            NotificationModule notification = new NotificationModule();
+                            notification.setTexte("le relais prise a ete eteint/allumee");
+                            notification.setTemps(temps);
+                            notificationModuleRepository.save(notification);
+                            relais.setState(true);
+                        }
+                        relaisPriseRepository.save(relais);
+                    }
+                    if(listeprise.get(i).getDatefin().equals(temps)){
+                        if(relais.getState()){
+                            NotificationModule notification = new NotificationModule();
+                            notification.setTexte("le relais prise a ete eteint/allumee");
+                            notification.setTemps(temps);
+                            notificationModuleRepository.save(notification);
+                            relais.setState(false);
+                        }
+                        else{
+                            NotificationModule notification = new NotificationModule();
+                            notification.setTexte("le relais prise a ete eteint/allumee");
+                            notification.setTemps(temps);
+                            notificationModuleRepository.save(notification);
+                            relais.setState(true);
+                        }
+                        relaisPriseRepository.save(relais);
+                        listeprise.get(i).setDone(true);
+                        planningPriseRepository.save(listeprise.get(i));
+                    }
+                }
+            }
         }
     }
