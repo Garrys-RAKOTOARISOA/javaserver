@@ -7,7 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface BatterieDataRepository extends CrudRepository<BatterieData, Long> {
-    List<BatterieData> findAdd();
-
+//    List<BatterieData> findAll();
     List<BatterieData> findByModule(ModuleSolar module);
 }
