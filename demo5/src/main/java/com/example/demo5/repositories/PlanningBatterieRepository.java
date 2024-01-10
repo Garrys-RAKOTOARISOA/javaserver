@@ -13,4 +13,6 @@ public interface PlanningBatterieRepository extends CrudRepository<PlanningBatte
     boolean existsByModuleAndDatedebutLessThanEqualAndDatefinGreaterThanEqual(
             ModuleSolar module, Timestamp datefin, Timestamp datedebut);
     List<PlanningBatterie> findByModule(ModuleSolar moduleSolar);
+
+    List<PlanningBatterie> findAllByOrderByDatedebutAscAndIdmoduleOrderByDatedebutAsc(Long bymodule);
 }

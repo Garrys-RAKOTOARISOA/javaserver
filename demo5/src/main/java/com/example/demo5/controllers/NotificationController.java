@@ -1,5 +1,7 @@
 package com.example.demo5.controllers;
 
+import com.example.demo5.fonc.Fonction;
+import com.example.demo5.models.ModuleSolar;
 import com.example.demo5.models.NotificationModule;
 import com.example.demo5.repositories.ModuleSolarRepository;
 import com.example.demo5.repositories.NotificationModuleRepository;
@@ -17,6 +19,17 @@ public class NotificationController {
     public NotificationController(NotificationModuleRepository notificationModuleRepository, ModuleSolarRepository moduleSolarRepository){
         this.notificationModuleRepository = notificationModuleRepository;
         this.moduleSolarRepository = moduleSolarRepository;
+    }
+
+    @GetMapping("/insertionnotification/{idmodule}/{texte}")
+    public String nouvelnotification(@PathVariable("idmodule")Long idmodule, @PathVariable("texte")String texte){
+        ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
+        NotificationModule notification = new NotificationModule();
+        notification.setModule(module);
+        notification.setTexte(texte);
+        notification.setTemps(Fonction.getCurrentTimestamp());
+        notificationModuleRepository.save(notification);
+        return "Notification inseree";
     }
 
     @GetMapping("/traitementnotification/{id}")

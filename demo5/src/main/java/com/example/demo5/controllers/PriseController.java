@@ -51,45 +51,36 @@
             priseData.setTemps(temps);
             priseDataRepository.save(priseData);
             RelaisPrise relais = relaisPriseRepository.findByModule(module);
-            List<PlanningPrise> listeprise = planningPriseRepository.findAllByOrderByDatedebutAsc();
+            List<PlanningPrise> listeprise = planningPriseRepository.findAllByOrderByDatedebutAscAndIdmoduleOrderByDatedebutAsc(module.getId());
             for (int i=0; i<listeprise.size(); i++){
                 if(!listeprise.get(i).getDone()){
-                    if(listeprise.get(i).getDatedebut().equals(temps)){
+                    if((listeprise.get(i).getDatedebut().equals(temps))&&(courant==0)){
                         if(relais.getState()){
-                            NotificationModule notification = new NotificationModule();
-                            notification.setTexte("le relais prise a ete eteint/allumee");
-                            notification.setTemps(temps);
-                            notificationModuleRepository.save(notification);
                             relais.setState(false);
                         }
                         else{
-                            NotificationModule notification = new NotificationModule();
-                            notification.setTexte("le relais prise a ete eteint/allumee");
-                            notification.setTemps(temps);
-                            notificationModuleRepository.save(notification);
                             relais.setState(true);
                         }
-                        relaisPriseRepository.save(relais);
                     }
                     if(listeprise.get(i).getDatefin().equals(temps)){
                         if(relais.getState()){
-                            NotificationModule notification = new NotificationModule();
-                            notification.setTexte("le relais prise a ete eteint/allumee");
-                            notification.setTemps(temps);
-                            notificationModuleRepository.save(notification);
                             relais.setState(false);
                         }
                         else{
-                            NotificationModule notification = new NotificationModule();
-                            notification.setTexte("le relais prise a ete eteint/allumee");
-                            notification.setTemps(temps);
-                            notificationModuleRepository.save(notification);
                             relais.setState(true);
                         }
-                        relaisPriseRepository.save(relais);
                         listeprise.get(i).setDone(true);
-                        planningPriseRepository.save(listeprise.get(i));
                     }
+                    if(courant >= listeprise.get(i).getValeurconsommation()){
+                        if(relais.getState()){
+                            relais.setState(false);
+                        }
+                        else{
+                            relais.setState(true);
+                        }
+                        listeprise.get(i).setDone(true);
+                    }
+                    planningPriseRepository.save(listeprise.get(i));
                 }
             }
         }
