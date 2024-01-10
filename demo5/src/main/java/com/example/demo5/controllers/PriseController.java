@@ -19,13 +19,16 @@
         private final RelaisPriseRepository relaisPriseRepository;
         private final NotificationModuleRepository notificationModuleRepository;
 
+        private final CouleurBoutonPriseRepository couleurBoutonPriseRepository;
+
         @Autowired
-        public PriseController(PriseDataRepository priseDataRepository, ModuleSolarRepository moduleSolarRepository, PlanningPriseRepository planningPriseRepository, RelaisPriseRepository relaisPriseRepository, NotificationModuleRepository notificationModuleRepository){
+        public PriseController(PriseDataRepository priseDataRepository, ModuleSolarRepository moduleSolarRepository, PlanningPriseRepository planningPriseRepository, RelaisPriseRepository relaisPriseRepository, NotificationModuleRepository notificationModuleRepository, CouleurBoutonPriseRepository couleurBoutonPriseRepository){
             this.priseDataRepository = priseDataRepository;
             this.moduleSolarRepository = moduleSolarRepository;
             this.planningPriseRepository = planningPriseRepository;
             this.relaisPriseRepository = relaisPriseRepository;
             this.notificationModuleRepository = notificationModuleRepository;
+            this.couleurBoutonPriseRepository = couleurBoutonPriseRepository;
         }
 
         @GetMapping("/listeprisedatabyidmodule/{idmodule}")
@@ -50,11 +53,26 @@
             priseData.setCourant(courant);
             priseData.setTemps(temps);
             priseDataRepository.save(priseData);
+
+            CouleurBoutonPrise couleurBoutonPrise = couleurBoutonPriseRepository.findByModule(module);
+            if(courant==0){
+                couleurBoutonPrise.setCouleur("rouge");
+            }
+            else{
+                couleurBoutonPrise.setCouleur("vert");
+            }
+            couleurBoutonPriseRepository.save(couleurBoutonPrise);
+
             RelaisPrise relais = relaisPriseRepository.findByModule(module);
             List<PlanningPrise> listeprise = planningPriseRepository.findByModuleOrderByDatedebut(module);
             for (int i=0; i<listeprise.size(); i++){
                 if(!listeprise.get(i).getDone()){
                     if((listeprise.get(i).getDatedebut().equals(temps))&&(courant==0)){
+                        NotificationModule notification = new NotificationModule();
+                        notification.setTemps(temps);
+                        notification.setTexte("Relais prise a ete allumee a "+temps);
+                        notification.setModule(module);
+                        notificationModuleRepository.save(notification);
                         if(relais.getState()){
                             relais.setState(false);
                         }
@@ -63,6 +81,11 @@
                         }
                     }
                     if(listeprise.get(i).getDatefin().equals(temps)){
+                        NotificationModule notification = new NotificationModule();
+                        notification.setTemps(temps);
+                        notification.setTexte("Relais prise a ete eteint a "+temps);
+                        notification.setModule(module);
+                        notificationModuleRepository.save(notification);
                         if(relais.getState()){
                             relais.setState(false);
                         }
@@ -72,6 +95,11 @@
                         listeprise.get(i).setDone(true);
                     }
                     if(courant >= listeprise.get(i).getValeurconsommation()){
+                        NotificationModule notification = new NotificationModule();
+                        notification.setTemps(temps);
+                        notification.setTexte("Relais prise a ete eteint, consommation "+listeprise.get(i).getValeurconsommation()+" Watt atteint a "+temps);
+                        notification.setModule(module);
+                        notificationModuleRepository.save(notification);
                         if(relais.getState()){
                             relais.setState(false);
                         }

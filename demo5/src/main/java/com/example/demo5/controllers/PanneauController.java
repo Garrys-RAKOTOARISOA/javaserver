@@ -6,10 +6,12 @@ import com.example.demo5.models.ModuleSolar;
 import com.example.demo5.models.PanneauData;
 import com.example.demo5.repositories.ModuleSolarRepository;
 import com.example.demo5.repositories.PanneauDataRepository;
+import org.hibernate.dialect.TimesTenDialect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -51,4 +53,19 @@ public class PanneauController {
         panneauDataRepository.save(panneauData);
     }
 
+    @GetMapping("/getproductionspecifiee/{idmodule}/{tempsdebut}/{tempsfin}")
+    public List<PanneauData> getListe(
+            @PathVariable("idmodule") Long idmodule,
+            @PathVariable("tempsdebut") Timestamp tempsdebut,
+            @PathVariable("tempsfin") Timestamp tempsfin) {
+        ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
+        List<PanneauData> liste = panneauDataRepository.findByModule(module);
+        List<PanneauData> realliste = new ArrayList<>();
+        for (PanneauData panneauData : liste) {
+            if (panneauData.getTemps().compareTo(tempsdebut) >= 0 && panneauData.getTemps().compareTo(tempsfin) <= 0) {
+                realliste.add(panneauData);
+            }
+        }
+        return realliste;
+    }
 }

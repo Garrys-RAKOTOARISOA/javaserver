@@ -32,6 +32,11 @@ public class NotificationController {
         return "Notification inseree";
     }
 
+    @GetMapping("/getnotification/{id}")
+    public NotificationModule getnotif(@PathVariable("id")Long id){
+        return notificationModuleRepository.findById(id).get();
+    }
+
     @GetMapping("/traitementnotification/{id}")
     public String traitementnotif(@PathVariable("id") Long id){
         NotificationModule notification = notificationModuleRepository.findById(id).get();

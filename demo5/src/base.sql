@@ -131,7 +131,7 @@ create table couleurboutonprise(
                                    foreign key(idmodule) references module(id)
 );
 
-create table couleuboutonbatterie(
+create table couleurboutonbatterie(
                                      id serial not null,
                                      idmodule int not null,
                                      couleur varchar(100) not null,
@@ -193,3 +193,6 @@ insert into planningprise(idmodule, datedebut, datefin, dateaction, valeurconsom
 insert into planningprise(idmodule, datedebut, datefin, dateaction, valeurconsommation) values (1,'2024-01-09 15:00:00','2024-01-10 16:00:00','2024-01-10 16:00:00',25);
 insert into planningprise(idmodule, datedebut, datefin, dateaction, valeurconsommation) values (1,'2024-01-08 15:00:00','2024-01-10 16:00:00','2024-01-10 16:00:00',25);
 insert into planningprise(idmodule, datedebut, datefin, dateaction, valeurconsommation) values (1,'2024-01-11 15:00:00','2024-01-10 16:00:00','2024-01-10 16:00:00',25);
+
+insert into couleurboutonbatterie(idmodule,couleur) values (1,'vert');
+insert into couleurboutonprise(idmodule,couleur) values (1,'vert');
