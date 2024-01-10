@@ -53,7 +53,7 @@ public class BatterieController {
         batterieData.setPourcentage((tension * 100)/typeBatterie.getValeur());
         batterieDataRepository.save(batterieData);
         RelaisBatterie relais = relaisBatterieRepository.findByModule(module);
-        List<PlanningBatterie> listeplanning = planningBatterieRepository.findAllByOrderByDatedebutAscAndModule_Idmodule(module.getId());
+        List<PlanningBatterie> listeplanning = planningBatterieRepository.findByModuleOrderByDatedebut(module);
         for (int i=0; i<listeplanning.size(); i++){
             if(!listeplanning.get(i).getDone()){
                 if((listeplanning.get(i).getDatedebut().equals(temps))&&(courant==0)){

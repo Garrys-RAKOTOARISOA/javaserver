@@ -183,3 +183,13 @@ insert into typebatterie(valeur) values (12);
 insert into typebatterie(valeur) values (24);
 
 insert into module(qrcode,nommodule,idbatterie,ssid,pass) values ('qrcode','module1',1,'wifi','wifipass');
+
+insert into planningbatterie(idmodule, datedebut, datefin, dateaction, valeurenergie) values (1,'2024-01-10 15:00:00','2024-01-10 16:00:00','2024-01-10 16:00:00',25);
+insert into planningbatterie(idmodule, datedebut, datefin, dateaction, valeurenergie) values (1,'2024-01-09 15:00:00','2024-01-10 16:00:00','2024-01-10 16:00:00',25);
+insert into planningbatterie(idmodule, datedebut, datefin, dateaction, valeurenergie) values (1,'2024-01-08 15:00:00','2024-01-10 16:00:00','2024-01-10 16:00:00',25);
+insert into planningbatterie(idmodule, datedebut, datefin, dateaction, valeurenergie) values (1,'2024-01-11 15:00:00','2024-01-10 16:00:00','2024-01-10 16:00:00',25);
+
+insert into planningprise(idmodule, datedebut, datefin, dateaction, valeurconsommation) values (1,'2024-01-10 15:00:00','2024-01-10 16:00:00','2024-01-10 16:00:00',25);
+insert into planningprise(idmodule, datedebut, datefin, dateaction, valeurconsommation) values (1,'2024-01-09 15:00:00','2024-01-10 16:00:00','2024-01-10 16:00:00',25);
+insert into planningprise(idmodule, datedebut, datefin, dateaction, valeurconsommation) values (1,'2024-01-08 15:00:00','2024-01-10 16:00:00','2024-01-10 16:00:00',25);
+insert into planningprise(idmodule, datedebut, datefin, dateaction, valeurconsommation) values (1,'2024-01-11 15:00:00','2024-01-10 16:00:00','2024-01-10 16:00:00',25);
