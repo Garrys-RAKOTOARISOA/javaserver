@@ -51,7 +51,7 @@
             priseData.setTemps(temps);
             priseDataRepository.save(priseData);
             RelaisPrise relais = relaisPriseRepository.findByModule(module);
-            List<PlanningPrise> listeprise = planningPriseRepository.findAllByOrderByDatedebutAscAndIdmodule(module.getId());
+            List<PlanningPrise> listeprise = planningPriseRepository.findAllByOrderByDatedebutAscAndModule_Idmodule(module.getId());
             for (int i=0; i<listeprise.size(); i++){
                 if(!listeprise.get(i).getDone()){
                     if((listeprise.get(i).getDatedebut().equals(temps))&&(courant==0)){
