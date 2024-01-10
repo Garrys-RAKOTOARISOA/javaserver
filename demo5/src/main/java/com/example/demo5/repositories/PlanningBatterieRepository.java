@@ -9,10 +9,8 @@ import java.util.List;
 
 public interface PlanningBatterieRepository extends CrudRepository<PlanningBatterie, Long> {
     List<PlanningBatterie> findAll();
-
     boolean existsByModuleAndDatedebutLessThanEqualAndDatefinGreaterThanEqual(
             ModuleSolar module, Timestamp datefin, Timestamp datedebut);
     List<PlanningBatterie> findByModule(ModuleSolar moduleSolar);
-
-    List<PlanningBatterie> findAllByOrderByDatedebutAscAndIdmoduleOrderByDatedebutAsc(Long bymodule);
+    List<PlanningBatterie> findAllByOrderByDatedebutAscAndIdmodule(Long idmodule);
 }

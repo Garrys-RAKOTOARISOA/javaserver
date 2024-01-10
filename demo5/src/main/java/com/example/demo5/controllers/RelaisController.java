@@ -51,4 +51,16 @@ public class RelaisController {
         relaisPriseRepository.save(relais);
         return "Switched prise";
     }
+
+    @GetMapping("/getrelaisbatteriebyidmodule/{idmodule}")
+    public RelaisBatterie getrelaisbatterie(@PathVariable("idmodule") Long idmodule){
+        ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
+        return relaisBatterieRepository.findByModule(module);
+    }
+
+    @GetMapping("/getrelaisprisebyidmodule/{idmodule}")
+    public RelaisPrise getrelaisprise(@PathVariable("idmodule") Long idmodule){
+        ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
+        return relaisPriseRepository.findByModule(module);
+    }
 }

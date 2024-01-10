@@ -56,5 +56,4 @@ public class PlanningBatterieController {
         return planningBatterieRepository.findByModule(module);
     }
 
-
 }

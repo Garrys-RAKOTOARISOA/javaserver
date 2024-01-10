@@ -15,5 +15,5 @@ public interface PlanningPriseRepository extends CrudRepository<PlanningPrise, L
 
     List<PlanningPrise> findByModule(ModuleSolar moduleSolar);
 
-    List<PlanningPrise> findAllByOrderByDatedebutAscAndIdmoduleOrderByDatedebutAsc(Long bymodule);
+    List<PlanningPrise> findAllByOrderByDatedebutAscAndIdmodule(Long bymodule);
 }
