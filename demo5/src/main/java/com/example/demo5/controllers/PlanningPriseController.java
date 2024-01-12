@@ -42,7 +42,6 @@ public class PlanningPriseController {
             planningPrise.setModule(module);
             planningPrise.setDatedebut(datedebut);
             planningPrise.setDatefin(datefin);
-            planningPrise.setDateaction(Fonction.getCurrentTimestamp());
             planningPrise.setValeurconsommation(valeurconsommation);
             planningPriseRepository.save(planningPrise);
             return "planning insere";

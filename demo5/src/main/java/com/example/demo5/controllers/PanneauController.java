@@ -49,7 +49,6 @@ public class PanneauController {
         panneauData.setTension(tension);
         panneauData.setPuissance(puissance);
         panneauData.setCourant(courant);
-        panneauData.setTemps(temps);
         panneauDataRepository.save(panneauData);
     }
 

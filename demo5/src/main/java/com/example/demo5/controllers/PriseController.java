@@ -51,7 +51,6 @@
             priseData.setTension(tension);
             priseData.setPuissance(puissance);
             priseData.setCourant(courant);
-            priseData.setTemps(temps);
             priseDataRepository.save(priseData);
 
             CouleurBoutonPrise couleurBoutonPrise = couleurBoutonPriseRepository.findByModule(module);

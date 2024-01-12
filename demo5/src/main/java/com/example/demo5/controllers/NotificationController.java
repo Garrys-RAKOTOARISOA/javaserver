@@ -8,6 +8,8 @@ import com.example.demo5.repositories.NotificationModuleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/solarnotification")
 @CrossOrigin("*")
@@ -27,7 +29,6 @@ public class NotificationController {
         NotificationModule notification = new NotificationModule();
         notification.setModule(module);
         notification.setTexte(texte);
-        notification.setTemps(Fonction.getCurrentTimestamp());
         notificationModuleRepository.save(notification);
         return "Notification inseree";
     }
@@ -43,5 +44,11 @@ public class NotificationController {
         notification.setSeen(true);
         notificationModuleRepository.save(notification);
         return "Notification traitee";
+    }
+
+    @GetMapping("/listenotificationbyidmodule/{idmodule}")
+    public List<NotificationModule> getlistenotif(@PathVariable("idmodule") Long idmodule){
+        ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
+        return notificationModuleRepository.findByModule(module);
     }
 }

@@ -54,7 +54,6 @@ public class BatterieController {
         batterieData.setEnergie(energie);
         batterieData.setCourant(courant);
         batterieData.setPuissance(puissance);
-        batterieData.setTemps(temps);
         batterieData.setPourcentage((tension * 100)/typeBatterie.getValeur());
         batterieDataRepository.save(batterieData);
 

@@ -43,7 +43,6 @@ public class PlanningBatterieController {
             planningBatterie.setModule(module);
             planningBatterie.setDatedebut(datedebut);
             planningBatterie.setDatefin(datefin);
-            planningBatterie.setDateaction(Fonction.getCurrentTimestamp());
             planningBatterie.setValeurenergie(valeurenergie);
             planningBatterieRepository.save(planningBatterie);
             return "planning insere";
