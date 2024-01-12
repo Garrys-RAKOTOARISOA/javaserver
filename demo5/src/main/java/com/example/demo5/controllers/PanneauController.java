@@ -41,7 +41,6 @@ public class PanneauController {
                                   @PathVariable("tension") double tension,
                                   @PathVariable("puissance") double puissance,
                                   @PathVariable("courant") double courant){
-        Timestamp temps = Fonction.getCurrentTimestamp();
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         PanneauData panneauData = new PanneauData();
         panneauData.setModule(module);
