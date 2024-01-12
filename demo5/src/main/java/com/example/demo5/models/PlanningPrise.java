@@ -30,7 +30,7 @@ public class PlanningPrise {
     @Column(nullable = false)
     private Timestamp datefin;
 
-    @Column(nullable = false)
+    @Column(insertable = false, updatable = false)
     private Timestamp dateaction;
 
     @Column(nullable = false)

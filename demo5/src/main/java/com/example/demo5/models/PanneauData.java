@@ -36,7 +36,7 @@ public class PanneauData {
     @Column(nullable = false)
     private Double courant;
 
-    @Column(nullable = false)
+    @Column(insertable = false, updatable = false)
     private Timestamp temps;
 
     public Long getId() {

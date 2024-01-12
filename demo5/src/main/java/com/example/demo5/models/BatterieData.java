@@ -36,7 +36,7 @@ public class BatterieData {
     @Column(nullable = false)
     private Double pourcentage;
 
-    @Column(nullable = false)
+    @Column(insertable = false, updatable = false)
     private Timestamp temps;
 
     @Column(nullable = false)

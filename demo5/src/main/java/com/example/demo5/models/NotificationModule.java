@@ -27,7 +27,7 @@ public class NotificationModule {
     @Column(nullable = false)
     private String texte;
 
-    @Column(nullable = false)
+    @Column(insertable = false, updatable = false)
     private Timestamp temps;
 
     @Column(nullable = false)
