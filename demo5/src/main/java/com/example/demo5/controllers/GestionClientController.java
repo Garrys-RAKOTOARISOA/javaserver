@@ -2,6 +2,7 @@ package com.example.demo5.controllers;
 
 import com.example.demo5.models.Client;
 import com.example.demo5.models.ModuleSolar;
+import com.example.demo5.models.UsefulEntity;
 import com.example.demo5.repositories.ClientRepository;
 import com.example.demo5.repositories.ModuleSolarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,5 +52,20 @@ public class GestionClientController {
         client.setLienimage(lienimage);
         client.setModule(module);
         clientRepository.save(client);
+    }
+
+    @GetMapping("/loginclient/{email}/{password}")
+    public UsefulEntity loginclient(@PathVariable("email")String email, @PathVariable("password")String password){
+        UsefulEntity usefulEntity = new UsefulEntity();
+        usefulEntity.setState(false);
+        List<Client> liste = clientRepository.findAll();
+        for(int i=0; i<liste.size(); i++){
+            if(liste.get(i).getEmail().equals(email)&&liste.get(i).getPass().equals(password)){
+                usefulEntity.setState(true);
+                usefulEntity.setIdmodule(liste.get(i).getModuleId().intValue());
+                usefulEntity.setIdclient(liste.get(i).getId());
+            }
+        }
+        return usefulEntity;
     }
 }

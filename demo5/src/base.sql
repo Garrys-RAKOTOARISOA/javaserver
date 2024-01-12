@@ -11,8 +11,6 @@ drop table couleuboutonbatterie cascade;
 drop table couleurboutonprise cascade;
 drop table planningbatterie cascade;
 drop table planningprise cascade;
-drop table totalconsommationprise cascade;
-drop table totalproductionpanneau cascade;
 drop table relaisbatterie cascade;
 drop table relaisprise cascade;
 drop table dureeutilisationbatterie cascade;
@@ -93,24 +91,6 @@ create table dureeutilisationbatterie(
                                          date date not null,
                                          primary key(id),
                                          foreign key(idmodule) references module(id)
-);
-
-create table totalconsommationprise(
-                                       id serial not null,
-                                       idmodule int not null,
-                                       total real not null,
-                                       date date not null,
-                                       primary key(id),
-                                       foreign key(idmodule) references module(id)
-);
-
-create table totalproductionpanneau(
-                                       id serial not null,
-                                       idmodule int not null,
-                                       total real not null,
-                                       date date not null,
-                                       primary key(id),
-                                       foreign key(idmodule) references module(id)
 );
 
 create table notificationmodule(
@@ -196,3 +176,6 @@ insert into planningprise(idmodule, datedebut, datefin, dateaction, valeurconsom
 
 insert into couleurboutonbatterie(idmodule,couleur) values (1,'vert');
 insert into couleurboutonprise(idmodule,couleur) values (1,'vert');
+
+insert into client(nom,prenom,email,pass,codepostal,lienimage,idmodule)
+values ('james','bond','j@g','j','tana102','lienimage',1);
