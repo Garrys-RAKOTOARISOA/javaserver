@@ -57,7 +57,9 @@ public class GestionClientController {
     @GetMapping("/loginclient/{email}/{password}")
     public UsefulEntity loginclient(@PathVariable("email")String email, @PathVariable("password")String password){
         UsefulEntity usefulEntity = new UsefulEntity();
+        usefulEntity.setIdclient(0L);
         usefulEntity.setState(false);
+        usefulEntity.setIdmodule(0);
         List<Client> liste = clientRepository.findAll();
         for(int i=0; i<liste.size(); i++){
             if(liste.get(i).getEmail().equals(email)&&liste.get(i).getPass().equals(password)){
