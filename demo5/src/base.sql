@@ -187,3 +187,4 @@ CREATE TABLE test (
 );
 
 insert into test(nom) values ('j');
+

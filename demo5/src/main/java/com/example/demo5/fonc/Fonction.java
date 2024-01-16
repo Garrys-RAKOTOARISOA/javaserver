@@ -1,6 +1,8 @@
 package com.example.demo5.fonc;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
@@ -32,5 +34,11 @@ public class Fonction {
         calendar.set(annee, mois - 1, jour);
 
         return calendar.getTime();
+    }
+
+    public static Date makeDate(String strdate) throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = formatter.parse(strdate);
+        return date;
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -71,10 +72,10 @@ public class PanneauController {
     }
 
     @GetMapping("/getTensionPanneauByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}")
-    public double getTensionPanneauByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") Date date, @PathVariable("heure") int heure, @PathVariable("minute") int minute){
+    public double getTensionPanneauByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure") int heure, @PathVariable("minute") int minute) throws ParseException {
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         List<PanneauData> liste = panneauDataRepository.findByModule(module);
-        Timestamp temps = Fonction.getTimestamp(date,heure,minute);
+        Timestamp temps = Fonction.getTimestamp(Fonction.makeDate(date),heure,minute);
         double toreturn = 0;
         for(int i=0; i<liste.size(); i++){
             if(liste.get(i).getTemps().equals(temps)){
@@ -85,11 +86,11 @@ public class PanneauController {
     }
 
     @GetMapping("/getProductionPanneauByIdModuleAndTemps1Temps2/{idmodule}/{date}/{heure1}/{minute1}/{heure2}/{minute2}")
-    public double getProductionPanneauByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") Date date, @PathVariable("heure1") int heure1, @PathVariable("minute1") int minute1, @PathVariable("heure2") int heure2, @PathVariable("minute2") int minute2){
+    public double getProductionPanneauByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure1") int heure1, @PathVariable("minute1") int minute1, @PathVariable("heure2") int heure2, @PathVariable("minute2") int minute2) throws ParseException {
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         List<PanneauData> liste = panneauDataRepository.findByModule(module);
-        Timestamp temps1 = Fonction.getTimestamp(date,heure1,minute1);
-        Timestamp temps2 = Fonction.getTimestamp(date,heure2,minute2);
+        Timestamp temps1 = Fonction.getTimestamp(Fonction.makeDate(date),heure1,minute1);
+        Timestamp temps2 = Fonction.getTimestamp(Fonction.makeDate(date),heure2,minute2);
         double prod1 = 0;
         double prod2 = 0;
         for(int i=0; i<liste.size(); i++){
@@ -104,10 +105,10 @@ public class PanneauController {
     }
 
     @GetMapping("/getCourantPanneauByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}")
-    public double getCourantPanneauByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") Date date, @PathVariable("heure") int heure, @PathVariable("minute") int minute){
+    public double getCourantPanneauByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure") int heure, @PathVariable("minute") int minute) throws ParseException {
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         List<PanneauData> liste = panneauDataRepository.findByModule(module);
-        Timestamp temps = Fonction.getTimestamp(date,heure,minute);
+        Timestamp temps = Fonction.getTimestamp(Fonction.makeDate(date),heure,minute);
         double toreturn = 0;
         for(int i=0; i<liste.size(); i++){
             if(liste.get(i).getTemps().equals(temps)){
@@ -118,10 +119,10 @@ public class PanneauController {
     }
 
     @GetMapping("/getPuissancePanneauByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}")
-    public double getPuissancePanneauByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") Date date, @PathVariable("heure") int heure, @PathVariable("minute") int minute){
+    public double getPuissancePanneauByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure") int heure, @PathVariable("minute") int minute) throws ParseException {
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         List<PanneauData> liste = panneauDataRepository.findByModule(module);
-        Timestamp temps = Fonction.getTimestamp(date,heure,minute);
+        Timestamp temps = Fonction.getTimestamp(Fonction.makeDate(date),heure,minute);
         double toreturn = 0;
         for(int i=0; i<liste.size(); i++){
             if(liste.get(i).getTemps().equals(temps)){
@@ -132,13 +133,13 @@ public class PanneauController {
     }
 
     @GetMapping("/listePanneauDataByDateAndIdModule/{date}/{idmodule}")
-    public List<PanneauData> listePanneauDataByDateAndIdModule(@PathVariable("date") Date date, @PathVariable("idmodule") Long idmodule){
+    public List<PanneauData> listePanneauDataByDateAndIdModule(@PathVariable("date") String date, @PathVariable("idmodule") Long idmodule) throws ParseException {
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get() ;
         List<PanneauData> liste = panneauDataRepository.findByModule(module);
         List<PanneauData> toreturn = new ArrayList<>();
         for(int i=0; i<liste.size(); i++){
             Date dataDate = Fonction.generateDate(liste.get(i).getTemps().getDate(),liste.get(i).getTemps().getMonth(),liste.get(i).getTemps().getYear());
-            if(dataDate.equals(date)){
+            if(dataDate.equals(Fonction.makeDate(date))){
                 toreturn.add(liste.get(i));
             }
         }
@@ -146,13 +147,13 @@ public class PanneauController {
     }
 
     @GetMapping("/getProductionPanneauByIdModuleAndDate/{idmodule}/{date}")
-    public double getProductionPanneauByIdModuleAndDate(@PathVariable("idmodule") Long idmodule, @PathVariable("date") Date date){
+    public double getProductionPanneauByIdModuleAndDate(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date) throws ParseException {
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         List<PanneauData> liste = panneauDataRepository.findByModule(module);
         List<PanneauData> realliste = new ArrayList<>();
         for(int i=0; i<liste.size(); i++){
             Date dataDate = Fonction.generateDate(liste.get(i).getTemps().getDate(),liste.get(i).getTemps().getMonth(),liste.get(i).getTemps().getYear());
-            if(date.equals(dataDate)){
+            if(Fonction.makeDate(date).equals(dataDate)){
                 realliste.add(liste.get(i));
             }
         }
