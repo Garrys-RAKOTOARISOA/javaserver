@@ -2,9 +2,11 @@ package com.example.demo5.controllers;
 
 import com.example.demo5.models.ModuleSolar;
 import com.example.demo5.models.RelaisBatterie;
+import com.example.demo5.models.RelaisPanneau;
 import com.example.demo5.models.RelaisPrise;
 import com.example.demo5.repositories.ModuleSolarRepository;
 import com.example.demo5.repositories.RelaisBatterieRepository;
+import com.example.demo5.repositories.RelaisPanneauRepository;
 import com.example.demo5.repositories.RelaisPriseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,13 +17,16 @@ import org.springframework.web.bind.annotation.*;
 public class RelaisController {
     private final RelaisBatterieRepository relaisBatterieRepository;
     private final RelaisPriseRepository relaisPriseRepository;
+
+    private final RelaisPanneauRepository relaisPanneauRepository;
     private final ModuleSolarRepository moduleSolarRepository;
 
     @Autowired
-    public RelaisController(RelaisBatterieRepository relaisBatterieRepository, RelaisPriseRepository relaisPriseRepository, ModuleSolarRepository moduleSolarRepository){
+    public RelaisController(RelaisBatterieRepository relaisBatterieRepository, RelaisPriseRepository relaisPriseRepository, RelaisPanneauRepository relaisPanneauRepository, ModuleSolarRepository moduleSolarRepository){
         this.moduleSolarRepository = moduleSolarRepository;
         this.relaisBatterieRepository = relaisBatterieRepository;
         this.relaisPriseRepository = relaisPriseRepository;
+        this.relaisPanneauRepository = relaisPanneauRepository;
     }
 
     @GetMapping("/switchrelaisbatterie/{idmodule}")
@@ -52,6 +57,20 @@ public class RelaisController {
         return "Switched prise";
     }
 
+    @GetMapping("/switchrelaispanneau/{idmodule}")
+    public String switchrelaispanneau(@PathVariable("idmodule") Long idmodule){
+        ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
+        RelaisPanneau relais = relaisPanneauRepository.findByModule(module);
+        if(relais.getState()){
+            relais.setState(false);
+        }
+        else{
+            relais.setState(true);
+        }
+        relaisPanneauRepository.save(relais);
+        return "Switched Panneau";
+    }
+
     @GetMapping("/getrelaisbatteriebyidmodule/{idmodule}")
     public RelaisBatterie getrelaisbatterie(@PathVariable("idmodule") Long idmodule){
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
@@ -62,5 +81,11 @@ public class RelaisController {
     public RelaisPrise getrelaisprise(@PathVariable("idmodule") Long idmodule){
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         return relaisPriseRepository.findByModule(module);
+    }
+
+    @GetMapping("/getrelaispanneaubyidmodule/{idmodule}")
+    public RelaisPanneau getrelaispanneau(@PathVariable("idmodule") Long idmodule){
+        ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
+        return relaisPanneauRepository.findByModule(module);
     }
 }

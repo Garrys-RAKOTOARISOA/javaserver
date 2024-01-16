@@ -2,15 +2,14 @@ package com.example.demo5.controllers;
 
 import ch.qos.logback.core.net.SyslogOutputStream;
 import com.example.demo5.fonc.Fonction;
-import com.example.demo5.models.BatterieData;
-import com.example.demo5.models.ModuleSolar;
-import com.example.demo5.models.PanneauData;
-import com.example.demo5.models.PriseData;
+import com.example.demo5.models.*;
+import com.example.demo5.repositories.CouleurBoutonPanneauRepository;
 import com.example.demo5.repositories.ModuleSolarRepository;
 import com.example.demo5.repositories.PanneauDataRepository;
 import org.hibernate.dialect.TimesTenDialect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -28,10 +27,12 @@ public class PanneauController {
     private final PanneauDataRepository panneauDataRepository;
     private final ModuleSolarRepository moduleSolarRepository;
 
+    private final CouleurBoutonPanneauRepository couleurBoutonPanneauRepository;
     @Autowired
-    public PanneauController(PanneauDataRepository panneauDataRepository, ModuleSolarRepository moduleSolarRepository){
+    public PanneauController(PanneauDataRepository panneauDataRepository, ModuleSolarRepository moduleSolarRepository, CouleurBoutonPanneauRepository couleurBoutonPanneauRepository){
         this.panneauDataRepository = panneauDataRepository;
         this.moduleSolarRepository = moduleSolarRepository;
+        this.couleurBoutonPanneauRepository = couleurBoutonPanneauRepository;
     }
 
     @GetMapping("/listepanneaudatabyidmodule/{idmodule}")
@@ -54,6 +55,14 @@ public class PanneauController {
         panneauData.setPuissance(puissance);
         panneauData.setCourant(courant);
         panneauDataRepository.save(panneauData);
+        CouleurBoutonPanneau bouton = couleurBoutonPanneauRepository.findByModule(module);
+        if(courant>0){
+            bouton.setCouleur("vert");
+        }
+        else{
+            bouton.setCouleur("rouge");
+        }
+        couleurBoutonPanneauRepository.save(bouton);
     }
 
     @GetMapping("/getTensionPanneauByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}/{seconde}")
@@ -151,5 +160,22 @@ public class PanneauController {
             toreturn = realliste.get(realliste.size() - 1).getProduction();
         }
         return toreturn;
+    }
+
+    @GetMapping("/getProductionPanneauIdMoisIdModule/{idmois}/{idmodule}")
+    public double getProductionPanneauIdMoisIdModule(@PathVariable("idmois") Long idmois, @PathVariable("idmodule") Long idmodule){
+        int annee = 2024;
+        List<LocalDate> listedates = Fonction.getAllDatesInMonth(annee, Math.toIntExact(idmois));
+        RestTemplate restTemplate = new RestTemplate();
+        double totalProduction = 0;
+
+        for (LocalDate date : listedates) {
+            String formattedDate = date.toString();
+            String url = "https://javaserver-production.up.railway.app/api/solarpanneau/getProductionPanneauByIdModuleAndDate/" + idmodule + "/" + formattedDate;
+
+            double duration = restTemplate.getForObject(url, Double.class);
+            totalProduction += duration;
+        }
+        return totalProduction;
     }
 }

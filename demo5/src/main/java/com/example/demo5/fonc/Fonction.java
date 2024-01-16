@@ -3,24 +3,17 @@ package com.example.demo5.fonc;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class Fonction {
-//    public static Timestamp getCurrentTimestamp() {
-//        ZonedDateTime zonedDateTime = ZonedDateTime.now(ZoneId.systemDefault());
-//        System.out.println(Timestamp.from(zonedDateTime.toInstant()));
-//        return Timestamp.from(zonedDateTime.toInstant());
-//    }
 
     public static Timestamp getCurrentTimestamp() {
         ZonedDateTime zonedDateTime = ZonedDateTime.now(ZoneId.systemDefault());
         Timestamp roundedTimestamp = new Timestamp(zonedDateTime.toInstant().toEpochMilli() / 1000 * 1000);
-        System.out.println(roundedTimestamp);
         return roundedTimestamp;
     }
 
@@ -62,5 +55,16 @@ public class Fonction {
         return dateToConvert.toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();
+    }
+
+    public static List<LocalDate> getAllDatesInMonth(int year, int month) {
+        YearMonth yearMonth = YearMonth.of(year, month);
+        LocalDate startMonth = yearMonth.atDay(1);
+        LocalDate endMonth = yearMonth.atEndOfMonth();
+        List<LocalDate> dates = new ArrayList<>();
+        for (LocalDate date = startMonth; !date.isAfter(endMonth); date = date.plusDays(1)) {
+            dates.add(date);
+        }
+        return dates;
     }
 }

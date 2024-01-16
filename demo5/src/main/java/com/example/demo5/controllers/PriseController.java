@@ -5,6 +5,7 @@
     import com.example.demo5.repositories.*;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.web.bind.annotation.*;
+    import org.springframework.web.client.RestTemplate;
 
     import java.sql.Timestamp;
     import java.text.ParseException;
@@ -85,7 +86,7 @@
                             relais.setState(true);
                         }
                     }
-                    if(tempsFin.equals(temps)){
+                    if(tempsFin.equals(temps)&&courant!=0){
                         NotificationModule notification = new NotificationModule();
                         notification.setTemps(temps);
                         notification.setTexte("Relais prise a ete eteint a "+temps);
@@ -213,5 +214,22 @@
                 toreturn = realliste.get(realliste.size() - 1).getConsommation();
             }
             return toreturn;
+        }
+
+        @GetMapping("/getConsommationPriseIdMoisIdModule/{idmois}/{idmodule}")
+        public double getConsommationPriseIdMoisIdModule(@PathVariable("idmois") Long idmois, @PathVariable("idmodule") Long idmodule){
+            int annee = 2024;
+            List<LocalDate> listedates = Fonction.getAllDatesInMonth(annee, Math.toIntExact(idmois));
+            RestTemplate restTemplate = new RestTemplate();
+            double totalConsommation = 0;
+
+            for (LocalDate date : listedates) {
+                String formattedDate = date.toString();
+                String url = "https://javaserver-production.up.railway.app/api/solarprise/getConsommationPriseByIdModuleAndDate/" + idmodule + "/" + formattedDate;
+
+                double duration = restTemplate.getForObject(url, Double.class);
+                totalConsommation += duration;
+            }
+            return totalConsommation;
         }
     }

@@ -17,6 +17,7 @@ drop table dureeutilisationbatterie cascade;
 drop table notificationmodule cascade;
 drop table typebatterie cascade;
 
+
 create table typebatterie(
                              id serial not null,
                              valeur real not null,
@@ -119,6 +120,14 @@ create table couleurboutonbatterie(
                                      foreign key(idmodule) references module(id)
 );
 
+create table couleurboutonpanneau(
+    id serial not null,
+    idmodule int not null,
+    couleur varchar(100) not null,
+    primary key(id),
+    foreign key(idmodule) references module(id)
+);
+
 create table planningprise(
                               id serial not null,
                               idmodule int not null,
@@ -159,6 +168,14 @@ create table relaisprise(
                             foreign key(idmodule) references module(id)
 );
 
+create table relaispanneau(
+    id serial not null,
+    idmodule int not null,
+    state boolean default false,
+    primary key(id),
+    foreign key(idmodule) references module
+);
+
 insert into typebatterie(valeur) values (12);
 insert into typebatterie(valeur) values (24);
 
@@ -176,15 +193,7 @@ insert into planningprise(idmodule, datedebut, datefin, valeurconsommation) valu
 
 insert into couleurboutonbatterie(idmodule,couleur) values (1,'vert');
 insert into couleurboutonprise(idmodule,couleur) values (1,'vert');
+insert into couleurboutonpanneau(idmodule,couleur) values (1,'vert');
 
 insert into client(nom,prenom,email,pass,codepostal,lienimage,idmodule)
 values ('james','bond','j@g','j','tana102','lienimage',1);
-
-CREATE TABLE test (
-    id SERIAL PRIMARY KEY,
-    nom varchar(100) not null,
-    temps TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-insert into test(nom) values ('j');
-

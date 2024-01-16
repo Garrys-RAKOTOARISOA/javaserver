@@ -5,6 +5,7 @@ import com.example.demo5.models.*;
 import com.example.demo5.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -28,7 +29,6 @@ public class BatterieController {
     private final CouleurBoutonBatterieRepository couleurBoutonBatterieRepository;
 
     private final DureeUtilisationBatterieRepository dureeUtilisationBatterieRepository;
-
     @Autowired
     public BatterieController(BatterieDataRepository batterieDataRepository, ModuleSolarRepository moduleSolarRepository, TypeBatterieRepository typeBatterieRepository, PlanningBatterieRepository planningBatterieRepository, RelaisBatterieRepository relaisBatterieRepository, NotificationModuleRepository notificationModuleRepository, CouleurBoutonBatterieRepository couleurBoutonBatterieRepository, DureeUtilisationBatterieRepository dureeUtilisationBatterieRepository){
         this.batterieDataRepository = batterieDataRepository;
@@ -113,7 +113,7 @@ public class BatterieController {
                         relais.setState(true);
                     }
                 }
-                if(tempsFin.equals(temps)){
+                if(tempsFin.equals(temps)&&courant!=0){
                     NotificationModule notification = new NotificationModule();
                     notification.setTemps(temps);
                     notification.setTexte("Relais batterie a ete eteint a "+temps);
@@ -125,6 +125,9 @@ public class BatterieController {
                     else{
                         relais.setState(true);
                     }
+                    listeplanning.get(i).setDone(true);
+                }
+                if((courant==0) && temps.after(tempsDebut) && temps.before(tempsFin)){
                     listeplanning.get(i).setDone(true);
                 }
                 if(courant >= listeplanning.get(i).getValeurenergie()){
@@ -234,5 +237,23 @@ public class BatterieController {
             }
         }
         return toreturn;
+    }
+
+    @GetMapping("/getDureeUtilisationBatterieIdMoisIdModule/{idmois}/{idmodule}")
+    public double getDureeUtilisationMoisIdModule(@PathVariable("idmois") Long idmois, @PathVariable("idmodule") Long idmodule){
+        int annee = 2024;
+        List<LocalDate> listedates = Fonction.getAllDatesInMonth(annee, Math.toIntExact(idmois));
+
+        RestTemplate restTemplate = new RestTemplate();
+        double totalDuration = 0;
+
+        for (LocalDate date : listedates) {
+            String formattedDate = date.toString();
+            String url = "https://javaserver-production.up.railway.app/api/solarbatterie/getDureeBatterieByIdModuleAndDate/" + idmodule + "/" + formattedDate;
+
+            double duration = restTemplate.getForObject(url, Double.class);
+            totalDuration += duration;
+        }
+        return totalDuration;
     }
 }
