@@ -41,7 +41,7 @@ create table batteriedata(
                              energie real not null,
                              courant real not null,
                              pourcentage real not null,
-                             temps TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                             temps TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                              puissance real not null,
                              primary key(id),
                              foreign key(idmodule) references module(id)

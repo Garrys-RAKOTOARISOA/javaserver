@@ -7,6 +7,8 @@
     import org.springframework.web.bind.annotation.*;
 
     import java.sql.Timestamp;
+    import java.util.ArrayList;
+    import java.util.Date;
     import java.util.List;
 
     @RestController
@@ -110,5 +112,80 @@
                     planningPriseRepository.save(listeprise.get(i));
                 }
             }
+        }
+
+        @GetMapping("/getTensionPriseByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}")
+        public double getTensionPriseByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") Date date, @PathVariable("heure") int heure, @PathVariable("minute") int minute){
+            ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
+            List<PriseData> liste = priseDataRepository.findByModule(module);
+            Timestamp temps = Fonction.getTimestamp(date,heure,minute);
+            double toreturn = 0;
+            for(int i=0; i<liste.size(); i++){
+                if(liste.get(i).getTemps().equals(temps)){
+                    toreturn = liste.get(i).getTension();
+                }
+            }
+            return toreturn;
+        }
+
+        @GetMapping("/getConsommationPriseByIdModuleAndTemps1Temps2/{idmodule}/{date}/{heure1}/{minute1}/{heure2}/{minute2}")
+        public double getConsommationPriseByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") Date date, @PathVariable("heure1") int heure1, @PathVariable("minute1") int minute1, @PathVariable("heure2") int heure2, @PathVariable("minute2") int minute2){
+            ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
+            List<PriseData> liste = priseDataRepository.findByModule(module);
+            Timestamp temps1 = Fonction.getTimestamp(date,heure1,minute1);
+            Timestamp temps2 = Fonction.getTimestamp(date,heure2,minute2);
+            double conso1 = 0;
+            double conso2 = 0;
+            for(int i=0; i<liste.size(); i++){
+                if(liste.get(i).getTemps().equals(temps1)){
+                    conso1 = liste.get(i).getConsommation();
+                }
+                if(liste.get(i).getTemps().equals(temps2)){
+                    conso2 = liste.get(i).getConsommation();
+                }
+            }
+            return conso2 - conso1;
+        }
+
+        @GetMapping("/getCourantPriseByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}")
+        public double getCourantPriseByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") Date date, @PathVariable("heure") int heure, @PathVariable("minute") int minute){
+            ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
+            List<PriseData> liste = priseDataRepository.findByModule(module);
+            Timestamp temps = Fonction.getTimestamp(date,heure,minute);
+            double toreturn = 0;
+            for(int i=0; i<liste.size(); i++){
+                if(liste.get(i).getTemps().equals(temps)){
+                    toreturn = liste.get(i).getCourant();
+                }
+            }
+            return toreturn;
+        }
+
+        @GetMapping("/getPuissancePriseByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}")
+        public double getPuissancePriseByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") Date date, @PathVariable("heure") int heure, @PathVariable("minute") int minute){
+            ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
+            List<PriseData> liste = priseDataRepository.findByModule(module);
+            Timestamp temps = Fonction.getTimestamp(date,heure,minute);
+            double toreturn = 0;
+            for(int i=0; i<liste.size(); i++){
+                if(liste.get(i).getTemps().equals(temps)){
+                    toreturn = liste.get(i).getPuissance();
+                }
+            }
+            return toreturn;
+        }
+
+        @GetMapping("/listePriseDataByDateAndIdModule/{date}/{idmodule}")
+        public List<PriseData> listePriseDataByDateAndIdModule(@PathVariable("date") Date date, @PathVariable("idmodule") Long idmodule){
+            ModuleSolar module = moduleSolarRepository.findById(idmodule).get() ;
+            List<PriseData> liste = priseDataRepository.findByModule(module);
+            List<PriseData> toreturn = new ArrayList<>();
+            for(int i=0; i<liste.size(); i++){
+                Date dataDate = Fonction.generateDate(liste.get(i).getTemps().getDate(),liste.get(i).getTemps().getMonth(),liste.get(i).getTemps().getYear());
+                if(dataDate.equals(date)){
+                    toreturn.add(liste.get(i));
+                }
+            }
+            return toreturn;
         }
     }
