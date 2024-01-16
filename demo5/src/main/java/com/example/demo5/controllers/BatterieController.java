@@ -143,9 +143,13 @@ public class BatterieController {
     }
 
     @GetMapping("/getDureeBatterieByIdModuleAndDate/{idmodule}/{date}")
-    public DureeUtilisationBatterie getDureeBatterieByIdModuleAndDate(@PathVariable("idmodule") Long idmodule, @PathVariable("date") Date date){
+    public double getDureeBatterieByIdModuleAndDate(@PathVariable("idmodule") Long idmodule, @PathVariable("date") Date date){
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
-        return dureeUtilisationBatterieRepository.findByDateAndModule(date,module).get(0);
+        double toreturn = 0;
+        if(dureeUtilisationBatterieRepository.findByDateAndModule(date,module).size()!=0){
+            toreturn = dureeUtilisationBatterieRepository.findByDateAndModule(date,module).get(0).getDuree()/3600;
+        }
+        return toreturn;
     }
 
     @GetMapping("/getTensionBatterieByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}")

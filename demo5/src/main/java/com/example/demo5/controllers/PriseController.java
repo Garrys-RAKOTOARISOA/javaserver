@@ -188,4 +188,22 @@
             }
             return toreturn;
         }
+
+        @GetMapping("/getConsommationPriseByIdModuleAndDate/{idmodule}/{date}")
+        public double getConsommationPriseByIdModuleAndDate(@PathVariable("idmodule") Long idmodule, @PathVariable("date") Date date){
+            ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
+            List<PriseData> liste = priseDataRepository.findByModule(module);
+            List<PriseData> realliste = new ArrayList<>();
+            for(int i=0; i<liste.size(); i++){
+                Date dataDate = Fonction.generateDate(liste.get(i).getTemps().getDate(),liste.get(i).getTemps().getMonth(),liste.get(i).getTemps().getYear());
+                if(date.equals(dataDate)){
+                    realliste.add(liste.get(i));
+                }
+            }
+            double toreturn = 0;
+            if(realliste.size()!=0){
+                toreturn = realliste.get(realliste.size() - 1).getConsommation();
+            }
+            return toreturn;
+        }
     }

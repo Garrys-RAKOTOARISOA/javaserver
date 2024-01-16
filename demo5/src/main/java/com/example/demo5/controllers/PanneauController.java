@@ -144,4 +144,22 @@ public class PanneauController {
         }
         return toreturn;
     }
+
+    @GetMapping("/getProductionPanneauByIdModuleAndDate/{idmodule}/{date}")
+    public double getProductionPanneauByIdModuleAndDate(@PathVariable("idmodule") Long idmodule, @PathVariable("date") Date date){
+        ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
+        List<PanneauData> liste = panneauDataRepository.findByModule(module);
+        List<PanneauData> realliste = new ArrayList<>();
+        for(int i=0; i<liste.size(); i++){
+            Date dataDate = Fonction.generateDate(liste.get(i).getTemps().getDate(),liste.get(i).getTemps().getMonth(),liste.get(i).getTemps().getYear());
+            if(date.equals(dataDate)){
+                realliste.add(liste.get(i));
+            }
+        }
+        double toreturn = 0;
+        if(realliste.size()!=0){
+            toreturn = realliste.get(realliste.size() - 1).getProduction();
+        }
+        return toreturn;
+    }
 }
