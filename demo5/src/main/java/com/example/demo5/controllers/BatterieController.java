@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -97,7 +98,9 @@ public class BatterieController {
         List<PlanningBatterie> listeplanning = planningBatterieRepository.findByModuleOrderByDatedebut(module);
         for (int i=0; i<listeplanning.size(); i++){
             if(!listeplanning.get(i).getDone()){
-                if((listeplanning.get(i).getDatedebut().equals(temps))&&(courant==0)){
+                Timestamp tempsFin = new Timestamp(listeplanning.get(i).getDatefin().getTime() / 1000 * 1000);
+                Timestamp tempsDebut = new Timestamp(listeplanning.get(i).getDatedebut().getTime() / 1000 * 1000);
+                if((tempsDebut.equals(temps))&&(courant==0)){
                     NotificationModule notification = new NotificationModule();
                     notification.setTemps(temps);
                     notification.setTexte("Relais batterie a ete allumee a "+temps);
@@ -110,7 +113,7 @@ public class BatterieController {
                         relais.setState(true);
                     }
                 }
-                if(listeplanning.get(i).getDatefin().equals(temps)){
+                if(tempsFin.equals(temps)){
                     NotificationModule notification = new NotificationModule();
                     notification.setTemps(temps);
                     notification.setTexte("Relais batterie a ete eteint a "+temps);
@@ -153,61 +156,65 @@ public class BatterieController {
         return toreturn;
     }
 
-    @GetMapping("/getTensionBatterieByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}")
-    public double getTensionBatterieByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure") int heure, @PathVariable("minute") int minute) throws ParseException {
+    @GetMapping("/getTensionBatterieByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}/{seconde}")
+    public double getTensionBatterieByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure") int heure, @PathVariable("minute") int minute, @PathVariable("seconde") int seconde) throws ParseException {
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         List<BatterieData> liste = batterieDataRepository.findByModule(module);
-        Timestamp temps = Fonction.getTimestamp(Fonction.makeDate(date),heure,minute);
+        Timestamp temps = Fonction.getTimestamp(Fonction.makeDate(date),heure,minute,seconde);
         double toreturn = 0;
         for(int i=0; i<liste.size(); i++){
-            if(liste.get(i).getTemps().equals(temps)){
+            Timestamp tempsData = new Timestamp(liste.get(i).getTemps().getTime() / 1000 * 1000);
+            if(tempsData.equals(temps)){
                 toreturn = liste.get(i).getTension();
             }
         }
         return toreturn;
     }
 
-    @GetMapping("/getEnergieBatterieByIdModuleAndTemps1Temps2/{idmodule}/{date}/{heure1}/{minute1}/{heure2}/{minute2}")
-    public double getEnergieBatterieByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure1") int heure1, @PathVariable("minute1") int minute1, @PathVariable("heure2") int heure2, @PathVariable("minute2") int minute2) throws ParseException {
+    @GetMapping("/getEnergieBatterieByIdModuleAndTemps1Temps2/{idmodule}/{date}/{heure1}/{minute1}/{seconde1}/{heure2}/{minute2}/{seconde2}")
+    public double getEnergieBatterieByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure1") int heure1, @PathVariable("minute1") int minute1, @PathVariable("seconde1") int seconde1, @PathVariable("heure2") int heure2, @PathVariable("minute2") int minute2, @PathVariable("seconde2") int seconde2) throws ParseException {
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         List<BatterieData> liste = batterieDataRepository.findByModule(module);
-        Timestamp temps1 = Fonction.getTimestamp(Fonction.makeDate(date),heure1,minute1);
-        Timestamp temps2 = Fonction.getTimestamp(Fonction.makeDate(date),heure2,minute2);
+        Timestamp temps1 = Fonction.getTimestamp(Fonction.makeDate(date),heure1,minute1,seconde1);
+        Timestamp temps2 = Fonction.getTimestamp(Fonction.makeDate(date),heure2,minute2,seconde2);
         double energie1 = 0;
         double energie2 = 0;
         for(int i=0; i<liste.size(); i++){
-            if(liste.get(i).getTemps().equals(temps1)){
+            Timestamp tempsData = new Timestamp(liste.get(i).getTemps().getTime() / 1000 * 1000);
+            if(tempsData.equals(temps1)){
                 energie1 = liste.get(i).getEnergie();
             }
-            if(liste.get(i).getTemps().equals(temps2)){
+            if(tempsData.equals(temps2)){
                 energie2 = liste.get(i).getEnergie();
             }
         }
         return energie2 - energie1;
     }
 
-    @GetMapping("/getCourantBatterieByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}")
-    public double getCourantBatterieByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure") int heure, @PathVariable("minute") int minute) throws ParseException {
+    @GetMapping("/getCourantBatterieByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}/{seconde}")
+    public double getCourantBatterieByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure") int heure, @PathVariable("minute") int minute, @PathVariable("seconde") int seconde) throws ParseException {
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         List<BatterieData> liste = batterieDataRepository.findByModule(module);
-        Timestamp temps = Fonction.getTimestamp(Fonction.makeDate(date),heure,minute);
+        Timestamp temps = Fonction.getTimestamp(Fonction.makeDate(date),heure,minute,seconde);
         double toreturn = 0;
         for(int i=0; i<liste.size(); i++){
-            if(liste.get(i).getTemps().equals(temps)){
+            Timestamp tempsData = new Timestamp(liste.get(i).getTemps().getTime() / 1000 * 1000);
+            if(tempsData.equals(temps)){
                 toreturn = liste.get(i).getCourant();
             }
         }
         return toreturn;
     }
 
-    @GetMapping("/getPuissanceBatterieByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}")
-    public double getPuissanceBatterieByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure") int heure, @PathVariable("minute") int minute) throws ParseException {
+    @GetMapping("/getPuissanceBatterieByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}/{seconde}")
+    public double getPuissanceBatterieByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure") int heure, @PathVariable("minute") int minute, @PathVariable("seconde") int seconde) throws ParseException {
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         List<BatterieData> liste = batterieDataRepository.findByModule(module);
-        Timestamp temps = Fonction.getTimestamp(Fonction.makeDate(date),heure,minute);
+        Timestamp temps = Fonction.getTimestamp(Fonction.makeDate(date),heure,minute, seconde);
         double toreturn = 0;
         for(int i=0; i<liste.size(); i++){
-            if(liste.get(i).getTemps().equals(temps)){
+            Timestamp tempsData = new Timestamp(liste.get(i).getTemps().getTime() / 1000 * 1000);
+            if(tempsData.equals(temps)){
                 toreturn = liste.get(i).getPuissance();
             }
         }
@@ -215,13 +222,14 @@ public class BatterieController {
     }
 
     @GetMapping("/listeBatterieDataByDateAndIdModule/{date}/{idmodule}")
-    public List<BatterieData> listeBatterieDataByDateAndIdModule(@PathVariable("date")String date, @PathVariable("idmodule") Long idmodule) throws ParseException {
-        ModuleSolar module = moduleSolarRepository.findById(idmodule).get() ;
+    public List<BatterieData> listeBatterieDataByDateAndIdModule(@PathVariable("date") String date, @PathVariable("idmodule") Long idmodule) throws ParseException {
+        ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         List<BatterieData> liste = batterieDataRepository.findByModule(module);
         List<BatterieData> toreturn = new ArrayList<>();
-        for(int i=0; i<liste.size(); i++){
-            Date dataDate = Fonction.generateDate(liste.get(i).getTemps().getDate(),liste.get(i).getTemps().getMonth(),liste.get(i).getTemps().getYear());
-            if(dataDate.equals(Fonction.makeDate(date))){
+        LocalDate targetDate = Fonction.convertDateToLocalDate(Fonction.makeDate(date));
+        for (int i = 0; i < liste.size(); i++) {
+            LocalDate dataDate = Fonction.convertDateToLocalDate(Fonction.generateDate(liste.get(i).getTemps().getDate(),liste.get(i).getTemps().getMonth(),Fonction.makeYear(liste.get(i).getTemps())));
+            if (dataDate.equals(targetDate)) {
                 toreturn.add(liste.get(i));
             }
         }
