@@ -197,3 +197,57 @@ insert into couleurboutonpanneau(idmodule,couleur) values (1,'vert');
 
 insert into client(nom,prenom,email,pass,codepostal,lienimage,idmodule)
 values ('james','bond','j@g','j','tana102','lienimage',1);
+
+create table dureeutilisationprise(
+    id serial not null,
+    idmodule int not null,
+    duree real not null,
+    date date not null,
+    primary key(id),
+    foreign key(idmodule) references module(id)
+);
+
+drop table referencedureebatterie cascade;
+drop table referencedureeprise cascade;
+drop table referencevaleurbatterie cascade;
+drop table referencevaleurprise cascade;
+
+create table referencedureebatterie(
+    id serial not null,
+    idmodule int not null,
+    dureelimite real not null,
+    date date not null,
+    done boolean default false,
+    primary key(id),
+    foreign key(idmodule) references module(id)
+);
+
+create table referencedureeprise(
+    id serial not null,
+    idmodule int not null,
+    dureelimite real not null,
+    date date not null,
+    done boolean default false,
+    primary key(id),
+    foreign key(idmodule) references module(id)
+);
+
+create table referencevaleurbatterie(
+    id serial not null,
+    idmodule int not null,
+    valeurlimite int not null,
+    date date not null,
+    done boolean default false,
+    primary key(id),
+    foreign key(idmodule) references module(id)
+);
+
+create table referencevaleurprise(
+    id serial not null,
+    idmodule int not null,
+    valeurlimite int not null,
+    date date not null,
+    done boolean default false,
+    primary key(id),
+    foreign key(idmodule) references module(id)
+);

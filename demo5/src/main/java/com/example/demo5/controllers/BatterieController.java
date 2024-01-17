@@ -25,10 +25,11 @@ public class BatterieController {
     private final RelaisBatterieRepository relaisBatterieRepository;
     private final NotificationModuleRepository notificationModuleRepository;
     private final CouleurBoutonBatterieRepository couleurBoutonBatterieRepository;
-
     private final DureeUtilisationBatterieRepository dureeUtilisationBatterieRepository;
+    private final ReferenceValeurBatterieRepository referenceValeurBatterieRepository;
+    private final ReferenceDureeBatterieRepository referenceDureeBatterieRepository;
     @Autowired
-    public BatterieController(BatterieDataRepository batterieDataRepository, ModuleSolarRepository moduleSolarRepository, TypeBatterieRepository typeBatterieRepository, PlanningBatterieRepository planningBatterieRepository, RelaisBatterieRepository relaisBatterieRepository, NotificationModuleRepository notificationModuleRepository, CouleurBoutonBatterieRepository couleurBoutonBatterieRepository, DureeUtilisationBatterieRepository dureeUtilisationBatterieRepository){
+    public BatterieController(BatterieDataRepository batterieDataRepository, ModuleSolarRepository moduleSolarRepository, TypeBatterieRepository typeBatterieRepository, PlanningBatterieRepository planningBatterieRepository, RelaisBatterieRepository relaisBatterieRepository, NotificationModuleRepository notificationModuleRepository, CouleurBoutonBatterieRepository couleurBoutonBatterieRepository, DureeUtilisationBatterieRepository dureeUtilisationBatterieRepository, ReferenceDureeBatterieRepository referenceDureeBatterieRepository, ReferenceValeurBatterieRepository referenceValeurBatterieRepository){
         this.batterieDataRepository = batterieDataRepository;
         this.moduleSolarRepository = moduleSolarRepository;
         this.typeBatterieRepository = typeBatterieRepository;
@@ -37,6 +38,8 @@ public class BatterieController {
         this.notificationModuleRepository = notificationModuleRepository;
         this.couleurBoutonBatterieRepository = couleurBoutonBatterieRepository;
         this.dureeUtilisationBatterieRepository = dureeUtilisationBatterieRepository;
+        this.referenceDureeBatterieRepository = referenceDureeBatterieRepository;
+        this.referenceValeurBatterieRepository = referenceValeurBatterieRepository;
     }
 
     @GetMapping("/listebatteriedatabyidmodule/{idmodule}")
@@ -101,7 +104,7 @@ public class BatterieController {
                 if((tempsDebut.equals(temps))&&(courant==0)){
                     NotificationModule notification = new NotificationModule();
                     notification.setTemps(temps);
-                    notification.setTexte("Relais batterie a ete allumee a "+temps);
+                    notification.setTexte("Le temps de planification sur la batterie commence  a "+temps);
                     notification.setModule(module);
                     notificationModuleRepository.save(notification);
                     if(relais.getState()){
@@ -114,7 +117,7 @@ public class BatterieController {
                 if(tempsFin.equals(temps)&&courant!=0){
                     NotificationModule notification = new NotificationModule();
                     notification.setTemps(temps);
-                    notification.setTexte("Relais batterie a ete eteint a "+temps);
+                    notification.setTexte("Le temps d’utilisation planifié sur votre batterie s’est écoulé a "+temps);
                     notification.setModule(module);
                     notificationModuleRepository.save(notification);
                     if(relais.getState()){
@@ -131,7 +134,7 @@ public class BatterieController {
                 if(courant >= listeplanning.get(i).getValeurenergie()){
                     NotificationModule notification = new NotificationModule();
                     notification.setTemps(temps);
-                    notification.setTexte("Relais batterie a ete eteint, energie "+listeplanning.get(i).getValeurenergie()+" V atteint a "+temps);
+                    notification.setTexte("La valeur d'energie dans la planification de la batterie a ete atteint, valeur= "+listeplanning.get(i).getValeurenergie()+" V a "+temps);
                     notification.setModule(module);
                     notificationModuleRepository.save(notification);
                     if(relais.getState()){
@@ -143,6 +146,33 @@ public class BatterieController {
                     listeplanning.get(i).setDone(true);
                 }
                 planningBatterieRepository.save(listeplanning.get(i));
+            }
+        }
+
+        DureeUtilisationBatterie dureeUtilisation = dureeUtilisationBatterieRepository.findByDateAndModule(todaydate, module).get(0);
+        ReferenceDureeBatterie referenceDureeBatterie = referenceDureeBatterieRepository.findByDateAndModule(todaydate, module).get(0);
+        if(!referenceDureeBatterie.isDone()){
+            if(dureeUtilisation.getDuree()/3600 >= referenceDureeBatterie.getDureelimite()){
+                NotificationModule notification = new NotificationModule();
+                notification.setModule(module);
+                notification.setTexte("la duree d'utilisation du batterie a atteint la limite de celle du reference a"+temps);
+                notification.setTemps(temps);
+                notificationModuleRepository.save(notification);
+                referenceDureeBatterie.setDone(true);
+                referenceDureeBatterieRepository.save(referenceDureeBatterie);
+            }
+        }
+
+        ReferenceValeurBatterie referenceValeurBatterie = referenceValeurBatterieRepository.findByDateAndModule(todaydate, module).get(0);
+        if(!referenceValeurBatterie.isDone()){
+            if(energie > referenceValeurBatterie.getValeurlimite()){
+                NotificationModule notification = new NotificationModule();
+                notification.setModule(module);
+                notification.setTexte("l'energie de la batterie a atteint la limite de celle du reference a"+temps);
+                notification.setTemps(temps);
+                notificationModuleRepository.save(notification);
+                referenceValeurBatterie.setDone(true);
+                referenceValeurBatterieRepository.save(referenceValeurBatterie);
             }
         }
     }

@@ -23,17 +23,21 @@
         private final PlanningPriseRepository planningPriseRepository;
         private final RelaisPriseRepository relaisPriseRepository;
         private final NotificationModuleRepository notificationModuleRepository;
-
         private final CouleurBoutonPriseRepository couleurBoutonPriseRepository;
-
+        private final DureeUtilisationPriseRepository dureeUtilisationPriseRepository;
+        private final ReferenceValeurPriseRepository referenceValeurPriseRepository;
+        private final ReferenceDureePriseRepository referenceDureePriseRepository;
         @Autowired
-        public PriseController(PriseDataRepository priseDataRepository, ModuleSolarRepository moduleSolarRepository, PlanningPriseRepository planningPriseRepository, RelaisPriseRepository relaisPriseRepository, NotificationModuleRepository notificationModuleRepository, CouleurBoutonPriseRepository couleurBoutonPriseRepository){
+        public PriseController(PriseDataRepository priseDataRepository, ModuleSolarRepository moduleSolarRepository, PlanningPriseRepository planningPriseRepository, RelaisPriseRepository relaisPriseRepository, NotificationModuleRepository notificationModuleRepository, CouleurBoutonPriseRepository couleurBoutonPriseRepository, DureeUtilisationPriseRepository dureeUtilisationPriseRepository, ReferenceValeurPriseRepository referenceValeurPriseRepository, ReferenceDureePriseRepository referenceDureePriseRepository){
             this.priseDataRepository = priseDataRepository;
             this.moduleSolarRepository = moduleSolarRepository;
             this.planningPriseRepository = planningPriseRepository;
             this.relaisPriseRepository = relaisPriseRepository;
             this.notificationModuleRepository = notificationModuleRepository;
             this.couleurBoutonPriseRepository = couleurBoutonPriseRepository;
+            this.dureeUtilisationPriseRepository = dureeUtilisationPriseRepository;
+            this.referenceValeurPriseRepository = referenceValeurPriseRepository;
+            this.referenceDureePriseRepository = referenceDureePriseRepository;
         }
 
         @GetMapping("/listeprisedatabyidmodule/{idmodule}")
@@ -58,6 +62,27 @@
             priseData.setCourant(courant);
             priseDataRepository.save(priseData);
 
+            Date today = Fonction.getCurrentDate();
+
+            DureeUtilisationPrise duree;
+
+            List<DureeUtilisationPrise> liste = dureeUtilisationPriseRepository.findByDateAndModule(today, module);
+
+            if(liste.isEmpty()){
+                duree = new DureeUtilisationPrise();
+                duree.setDate(today);
+                duree.setModule(module);
+                duree.setDuree((double) 0);
+                dureeUtilisationPriseRepository.save(duree);
+            }
+            else{
+                if(courant > 0){
+                    duree = liste.get(0);
+                    duree.setDuree(duree.getDuree()+1);
+                    dureeUtilisationPriseRepository.save(duree);
+                }
+            }
+
             CouleurBoutonPrise couleurBoutonPrise = couleurBoutonPriseRepository.findByModule(module);
             if(courant==0){
                 couleurBoutonPrise.setCouleur("rouge");
@@ -76,7 +101,7 @@
                     if((tempsDebut.equals(temps))&&(courant==0)){
                         NotificationModule notification = new NotificationModule();
                         notification.setTemps(temps);
-                        notification.setTexte("Relais prise a ete allumee a "+temps);
+                        notification.setTexte("Le temps de planification sur la prise commence a "+temps);
                         notification.setModule(module);
                         notificationModuleRepository.save(notification);
                         if(relais.getState()){
@@ -89,7 +114,7 @@
                     if(tempsFin.equals(temps)&&courant!=0){
                         NotificationModule notification = new NotificationModule();
                         notification.setTemps(temps);
-                        notification.setTexte("Relais prise a ete eteint a "+temps);
+                        notification.setTexte("Le temps d’utilisation planifié sur votre prise s’est écoulé a "+temps);
                         notification.setModule(module);
                         notificationModuleRepository.save(notification);
                         if(relais.getState()){
@@ -103,7 +128,7 @@
                     if(courant >= listeprise.get(i).getValeurconsommation()){
                         NotificationModule notification = new NotificationModule();
                         notification.setTemps(temps);
-                        notification.setTexte("Relais prise a ete eteint, consommation "+listeprise.get(i).getValeurconsommation()+" Watt atteint a "+temps);
+                        notification.setTexte("La consommation a atteint la moyenne de la valeur qui devra être utilisé chaque jour, valeur = "+listeprise.get(i).getValeurconsommation()+" a "+temps);
                         notification.setModule(module);
                         notificationModuleRepository.save(notification);
                         if(relais.getState()){
@@ -115,6 +140,32 @@
                         listeprise.get(i).setDone(true);
                     }
                     planningPriseRepository.save(listeprise.get(i));
+                }
+
+                ReferenceValeurPrise referencevaleurprise = referenceValeurPriseRepository.findByDateAndModule(today, module).get(0);
+                if(!referencevaleurprise.isDone()){
+                    if(consommation >= referencevaleurprise.getValeurlimite()){
+                        NotificationModule notification = new NotificationModule();
+                        notification.setModule(module);
+                        notification.setTexte("la consommation prise a depassee la limite de celle du reference a"+temps);
+                        notification.setTemps(temps);
+                        notificationModuleRepository.save(notification);
+                        referencevaleurprise.setDone(true);
+                        referenceValeurPriseRepository.save(referencevaleurprise);
+                    }
+                }
+                ReferenceDureePrise referencedureeprise = referenceDureePriseRepository.findByDateAndModule(today, module).get(0);
+                DureeUtilisationPrise dureeUtilisationPrise = dureeUtilisationPriseRepository.findByDateAndModule(today, module).get(0);
+                if(!referencedureeprise.isDone()){
+                    if((dureeUtilisationPrise.getDuree()/3600) >= referencedureeprise.getDureelimite()){
+                        NotificationModule notification = new NotificationModule();
+                        notification.setModule(module);
+                        notification.setTexte("la duree limite d'utilisation du prise du reference est depasse a"+temps);
+                        notification.setTemps(temps);
+                        notificationModuleRepository.save(notification);
+                        referencevaleurprise.setDone(true);
+                        referenceValeurPriseRepository.save(referencevaleurprise);
+                    }
                 }
             }
         }

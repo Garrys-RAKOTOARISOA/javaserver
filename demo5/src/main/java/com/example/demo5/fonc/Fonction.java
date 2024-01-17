@@ -72,4 +72,8 @@ public class Fonction {
         }
         return dates;
     }
+
+    public static LocalDate todayDate() {
+        return LocalDate.now();
+    }
 }
