@@ -13,7 +13,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Timer;
 
 @RestController
 @RequestMapping("/api/solarbatterie")
@@ -255,5 +254,16 @@ public class BatterieController {
             totalDuration += duration;
         }
         return totalDuration;
+    }
+    @GetMapping("/getDureeUtilisationBatterieAnuelleByIdModule/{idmodule}")
+    public double[] getDureeUtilisationBatterieByIdModule(@PathVariable("idmodule") Long idmodule){
+        double[] toreturn = new double[12];
+        RestTemplate restTemplate = new RestTemplate();
+
+        for (int i=0; i<12; i++){
+            String url = "https://javaserver-production.up.railway.app/api/solarbatterie/getDureeUtilisationBatterieIdMoisIdModule/" + (i+1) + "/" + idmodule;
+            toreturn[i] = restTemplate.getForObject(url, Double.class);
+        }
+        return toreturn;
     }
 }
