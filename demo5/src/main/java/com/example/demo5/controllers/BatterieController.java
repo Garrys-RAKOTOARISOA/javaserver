@@ -3,6 +3,7 @@ package com.example.demo5.controllers;
 import com.example.demo5.fonc.Fonction;
 import com.example.demo5.models.*;
 import com.example.demo5.repositories.*;
+import javafx.beans.binding.ObjectBinding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -237,23 +238,66 @@ public class BatterieController {
         }
         return toreturn;
     }
-    @GetMapping("/listeDureeBatterieMensuelleByIdModule/{idmodule}/{idmois}")
-    public double[][] listeDureeBatterieMensuelle(@PathVariable("idmodule") Long idmodule, @PathVariable("idmois") int idmois){
+    @GetMapping("/listeDureeBatterieMensuelleByIdModuleAndMonth/{idmodule}/{idmois}")
+    public DureeBatterieMensuelle listeDureeBatterieMensuelle(@PathVariable("idmodule") Long idmodule, @PathVariable("idmois") int idmois){
         int annee = 2024;
         RestTemplate restTemplate = new RestTemplate();
-        ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         List<LocalDate> listedates = Fonction.getAllDatesInMonth(annee, Math.toIntExact(idmois));
-        double[][] toreturn = new double[5][7];
-        int date = 1;
-        for(int i=0; i<5; i++){
-            int j = 0;
-            while (j<7){
-                String url = "https://javaserver-production.up.railway.app/api/solarbatterie/getDureeBatterieByIdModuleAndDate/"+ idmodule +"/"+listedates.get(i).toString();
-                toreturn[i][j] = restTemplate.getForObject(url, Double.class);;
-                j++;
-            }
+        Double[][] toreturn = new Double[listedates.size()][2];
+        for(int i=0; i<listedates.size(); i++){
+            String url = "https://javaserver-production.up.railway.app/api/solarbatterie/getDureeBatterieByIdModuleAndDate/"+ idmodule +"/"+listedates.get(i).toString();
+            toreturn[i][0] = (double) (i+1);
+            toreturn[i][1] = restTemplate.getForObject(url, Double.class);
         }
-        return toreturn;
+        ArrayList<Object> semaine1 = new ArrayList<>();
+        ArrayList<Object> semaine2 = new ArrayList<>();
+        ArrayList<Object> semaine3 = new ArrayList<>();
+        ArrayList<Object> semaine4 = new ArrayList<>();
+        ArrayList<Object> semaine5 = new ArrayList<>();
+        for(int i=0; i<7; i++){
+            semaine1.add(listedates.get(i));
+            semaine1.add(toreturn[i][1]);
+        }
+        for(int i=7; i<14; i++){
+            semaine2.add(listedates.get(i));
+            semaine2.add(toreturn[i][1]);
+        }
+        for(int i=14; i<21; i++){
+            semaine3.add(listedates.get(i));
+            semaine3.add(toreturn[i][1]);
+        }
+        for(int i=21; i<28; i++){
+            semaine4.add(listedates.get(i));
+            semaine4.add(toreturn[i][1]);
+        }
+        if(listedates.size() == 29){
+            semaine5.add(listedates.get(28));
+            semaine5.add(toreturn[28][1]);
+        }
+        if(listedates.size() == 30){
+            semaine5.add(listedates.get(28));
+            semaine5.add(toreturn[28][1]);
+            semaine5.add(listedates.get(29));
+            semaine5.add(toreturn[29][1]);
+        }
+        if(listedates.size() == 31){
+            semaine5.add(listedates.get(28));
+            semaine5.add(toreturn[28][1]);
+            semaine5.add(listedates.get(29));
+            semaine5.add(toreturn[29][1]);
+            semaine5.add(listedates.get(30));
+            semaine5.add(toreturn[30][1]);
+        }
+
+        DureeBatterieMensuelle dureeBatterieMensuelle = new DureeBatterieMensuelle();
+        dureeBatterieMensuelle.setIdmois(idmois);
+        dureeBatterieMensuelle.setIdmodule(Math.toIntExact(idmodule));
+        dureeBatterieMensuelle.setSemaine1(semaine1);
+        dureeBatterieMensuelle.setSemaine2(semaine1);
+        dureeBatterieMensuelle.setSemaine3(semaine3);
+        dureeBatterieMensuelle.setSemaine4(semaine4);
+        dureeBatterieMensuelle.setSemaine5(semaine5);
+        return dureeBatterieMensuelle;
     }
 
     @GetMapping("/getDureeUtilisationBatterieIdMoisIdModule/{idmois}/{idmodule}")
