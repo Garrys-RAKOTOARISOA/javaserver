@@ -39,6 +39,7 @@ public class Fonction {
         calendar.set(Calendar.SECOND, 0);
         return calendar.getTime();
     }
+
     public static Date makeDate(String strdate) throws ParseException {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date date = formatter.parse(strdate);
@@ -55,6 +56,10 @@ public class Fonction {
         return dateToConvert.toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();
+    }
+
+    public static LocalDate timeStampToLocalDate(Timestamp timestamp){
+        return timestamp.toLocalDateTime().toLocalDate();
     }
 
     public static List<LocalDate> getAllDatesInMonth(int year, int month) {

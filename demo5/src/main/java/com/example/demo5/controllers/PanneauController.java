@@ -1,12 +1,10 @@
 package com.example.demo5.controllers;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import com.example.demo5.fonc.Fonction;
 import com.example.demo5.models.*;
 import com.example.demo5.repositories.CouleurBoutonPanneauRepository;
 import com.example.demo5.repositories.ModuleSolarRepository;
 import com.example.demo5.repositories.PanneauDataRepository;
-import org.hibernate.dialect.TimesTenDialect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -15,7 +13,6 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -136,7 +133,7 @@ public class PanneauController {
         List<PanneauData> liste = panneauDataRepository.findByModule(module);
         List<PanneauData> toreturn = new ArrayList<>();
         for(int i=0; i<liste.size(); i++){
-            LocalDate dataDate = Fonction.convertDateToLocalDate(Fonction.generateDate(liste.get(i).getTemps().getDate(),liste.get(i).getTemps().getMonth(),liste.get(i).getTemps().getYear()));
+            LocalDate dataDate = Fonction.timeStampToLocalDate(liste.get(i).getTemps());
             if(dataDate.equals(Fonction.convertDateToLocalDate(Fonction.makeDate(date)))){
                 toreturn.add(liste.get(i));
             }
@@ -150,7 +147,7 @@ public class PanneauController {
         List<PanneauData> liste = panneauDataRepository.findByModule(module);
         List<PanneauData> realliste = new ArrayList<>();
         for(int i=0; i<liste.size(); i++){
-            Date dataDate = Fonction.generateDate(liste.get(i).getTemps().getDate(),liste.get(i).getTemps().getMonth(),liste.get(i).getTemps().getYear());
+            LocalDate dataDate = Fonction.timeStampToLocalDate(liste.get(i).getTemps());
             if(Fonction.makeDate(date).equals(dataDate)){
                 realliste.add(liste.get(i));
             }
@@ -177,5 +174,79 @@ public class PanneauController {
             totalProduction += duration;
         }
         return totalProduction;
+    }
+
+    @GetMapping("/getProductionPanneauAnnuelleIdModule/{idmodule}")
+    public double[] getProductionPanneauAnnuelleIdModule(@PathVariable("idmodule") Long idmodule){
+        RestTemplate restTemplate = new RestTemplate();
+        double[] toreturn = new double[12];
+        for(int i=0; i<toreturn.length; i++){
+            String url = "https://javaserver-production.up.railway.app/api/solarpanneau/getProductionPanneauIdMoisIdModule/"+ (i+1) +"/"+ idmodule;
+            toreturn[i] = restTemplate.getForObject(url, Double.class);
+        }
+        return toreturn;
+    }
+
+    @GetMapping("/listeProductionPanneauMensuelleByIdModuleAndMonth/{idmodule}/{idmois}")
+    public ProductionPanneauMensuelle listeProductionPanneauMensuelleByIdModuleAndMonth(@PathVariable("idmodule") Long idmodule, @PathVariable("idmois") Long idmois){
+        int annee = 2024;
+        RestTemplate restTemplate = new RestTemplate();
+        List<LocalDate> listedates = Fonction.getAllDatesInMonth(annee, Math.toIntExact(idmois));
+        Double[][] toreturn = new Double[listedates.size()][2];
+        for(int i=0; i<listedates.size(); i++){
+            String url = "https://javaserver-production.up.railway.app/api/solarpanneau/getProductionPanneauByIdModuleAndDate/"+ idmodule +"/"+ listedates.get(i).toString();
+            toreturn[i][0] = (double) (i+1);
+            toreturn[i][1] = restTemplate.getForObject(url, Double.class);
+            System.out.println(restTemplate.getForObject(url, Double.class));
+        }
+        ArrayList<Object> semaine1 = new ArrayList<>();
+        ArrayList<Object> semaine2 = new ArrayList<>();
+        ArrayList<Object> semaine3 = new ArrayList<>();
+        ArrayList<Object> semaine4 = new ArrayList<>();
+        ArrayList<Object> semaine5 = new ArrayList<>();
+        for(int i=0; i<7; i++){
+            semaine1.add(listedates.get(i));
+            semaine1.add(toreturn[i][1]);
+        }
+        for(int i=7; i<14; i++){
+            semaine2.add(listedates.get(i));
+            semaine2.add(toreturn[i][1]);
+        }
+        for(int i=14; i<21; i++){
+            semaine3.add(listedates.get(i));
+            semaine3.add(toreturn[i][1]);
+        }
+        for(int i=21; i<28; i++){
+            semaine4.add(listedates.get(i));
+            semaine4.add(toreturn[i][1]);
+        }
+        if(listedates.size() == 29){
+            semaine5.add(listedates.get(28));
+            semaine5.add(toreturn[28][1]);
+        }
+        if(listedates.size() == 30){
+            semaine5.add(listedates.get(28));
+            semaine5.add(toreturn[28][1]);
+            semaine5.add(listedates.get(29));
+            semaine5.add(toreturn[29][1]);
+        }
+        if(listedates.size() == 31){
+            semaine5.add(listedates.get(28));
+            semaine5.add(toreturn[28][1]);
+            semaine5.add(listedates.get(29));
+            semaine5.add(toreturn[29][1]);
+            semaine5.add(listedates.get(30));
+            semaine5.add(toreturn[30][1]);
+        }
+        ProductionPanneauMensuelle productionPanneauMensuelle = new ProductionPanneauMensuelle();
+        productionPanneauMensuelle.setIdmois(Math.toIntExact(idmois));
+        productionPanneauMensuelle.setIdmodule(Math.toIntExact(idmodule));
+        productionPanneauMensuelle.setSemaine1(semaine1);
+        productionPanneauMensuelle.setSemaine2(semaine2);
+        productionPanneauMensuelle.setSemaine3(semaine3);
+        productionPanneauMensuelle.setSemaine4(semaine4);
+        productionPanneauMensuelle.setSemaine5(semaine5);
+
+        return productionPanneauMensuelle;
     }
 }

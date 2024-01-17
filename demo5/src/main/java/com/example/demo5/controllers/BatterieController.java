@@ -24,7 +24,6 @@ public class BatterieController {
     private final PlanningBatterieRepository planningBatterieRepository;
     private final RelaisBatterieRepository relaisBatterieRepository;
     private final NotificationModuleRepository notificationModuleRepository;
-
     private final CouleurBoutonBatterieRepository couleurBoutonBatterieRepository;
 
     private final DureeUtilisationBatterieRepository dureeUtilisationBatterieRepository;
