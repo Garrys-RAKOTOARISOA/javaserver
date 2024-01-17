@@ -148,16 +148,6 @@ public class BatterieController {
         }
     }
 
-    @GetMapping("/getDureeBatterieByIdModuleAndDate/{idmodule}/{date}")
-    public double getDureeBatterieByIdModuleAndDate(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date) throws ParseException {
-        ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
-        double toreturn = 0;
-        if(!dureeUtilisationBatterieRepository.findByDateAndModule(Fonction.makeDate(date), module).isEmpty()){
-            toreturn = dureeUtilisationBatterieRepository.findByDateAndModule(Fonction.makeDate(date),module).get(0).getDuree()/3600;
-        }
-        return toreturn;
-    }
-
     @GetMapping("/getTensionBatterieByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}/{seconde}")
     public double getTensionBatterieByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure") int heure, @PathVariable("minute") int minute, @PathVariable("seconde") int seconde) throws ParseException {
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
@@ -233,6 +223,34 @@ public class BatterieController {
             LocalDate dataDate = Fonction.convertDateToLocalDate(Fonction.generateDate(liste.get(i).getTemps().getDate(),liste.get(i).getTemps().getMonth(),Fonction.makeYear(liste.get(i).getTemps())));
             if (dataDate.equals(targetDate)) {
                 toreturn.add(liste.get(i));
+            }
+        }
+        return toreturn;
+    }
+
+    @GetMapping("/getDureeBatterieByIdModuleAndDate/{idmodule}/{date}")
+    public double getDureeBatterieByIdModuleAndDate(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date) throws ParseException {
+        ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
+        double toreturn = 0;
+        if(!dureeUtilisationBatterieRepository.findByDateAndModule(Fonction.makeDate(date), module).isEmpty()){
+            toreturn = dureeUtilisationBatterieRepository.findByDateAndModule(Fonction.makeDate(date),module).get(0).getDuree()/3600;
+        }
+        return toreturn;
+    }
+    @GetMapping("/listeDureeBatterieMensuelleByIdModule/{idmodule}/{idmois}")
+    public double[][] listeDureeBatterieMensuelle(@PathVariable("idmodule") Long idmodule, @PathVariable("idmois") int idmois){
+        int annee = 2024;
+        RestTemplate restTemplate = new RestTemplate();
+        ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
+        List<LocalDate> listedates = Fonction.getAllDatesInMonth(annee, Math.toIntExact(idmois));
+        double[][] toreturn = new double[5][7];
+        int date = 1;
+        for(int i=0; i<5; i++){
+            int j = 0;
+            while (j<7){
+                String url = "https://javaserver-production.up.railway.app/api/solarbatterie/getDureeBatterieByIdModuleAndDate/"+ idmodule +"/"+listedates.get(i).toString();
+                toreturn[i][j] = restTemplate.getForObject(url, Double.class);;
+                j++;
             }
         }
         return toreturn;
