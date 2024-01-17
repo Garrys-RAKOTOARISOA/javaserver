@@ -3,7 +3,6 @@ package com.example.demo5.controllers;
 import com.example.demo5.fonc.Fonction;
 import com.example.demo5.models.*;
 import com.example.demo5.repositories.*;
-import javafx.beans.binding.ObjectBinding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
