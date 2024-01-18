@@ -150,29 +150,33 @@ public class BatterieController {
         }
 
         DureeUtilisationBatterie dureeUtilisation = dureeUtilisationBatterieRepository.findByDateAndModule(todaydate, module).get(0);
-        ReferenceDureeBatterie referenceDureeBatterie = referenceDureeBatterieRepository.findByDateAndModule(todaydate, module).get(0);
-        if(!referenceDureeBatterie.isDone()){
-            if(dureeUtilisation.getDuree()/3600 >= referenceDureeBatterie.getDureelimite()){
-                NotificationModule notification = new NotificationModule();
-                notification.setModule(module);
-                notification.setTexte("la duree d'utilisation du batterie a atteint la limite de celle du reference a"+temps);
-                notification.setTemps(temps);
-                notificationModuleRepository.save(notification);
-                referenceDureeBatterie.setDone(true);
-                referenceDureeBatterieRepository.save(referenceDureeBatterie);
+        List<ReferenceDureeBatterie> referenceDureeBatterie = referenceDureeBatterieRepository.findByDateAndModule(todaydate, module);
+        if(!referenceDureeBatterie.isEmpty()){
+            if(!referenceDureeBatterie.get(0).isDone()){
+                if(dureeUtilisation.getDuree()/3600 >= referenceDureeBatterie.get(0).getDureelimite()){
+                    NotificationModule notification = new NotificationModule();
+                    notification.setModule(module);
+                    notification.setTexte("la duree d'utilisation du batterie a atteint la limite de celle du reference a"+temps);
+                    notification.setTemps(temps);
+                    notificationModuleRepository.save(notification);
+                    referenceDureeBatterie.get(0).setDone(true);
+                    referenceDureeBatterieRepository.save(referenceDureeBatterie.get(0));
+                }
             }
         }
 
-        ReferenceValeurBatterie referenceValeurBatterie = referenceValeurBatterieRepository.findByDateAndModule(todaydate, module).get(0);
-        if(!referenceValeurBatterie.isDone()){
-            if(energie > referenceValeurBatterie.getValeurlimite()){
-                NotificationModule notification = new NotificationModule();
-                notification.setModule(module);
-                notification.setTexte("l'energie de la batterie a atteint la limite de celle du reference a"+temps);
-                notification.setTemps(temps);
-                notificationModuleRepository.save(notification);
-                referenceValeurBatterie.setDone(true);
-                referenceValeurBatterieRepository.save(referenceValeurBatterie);
+        List<ReferenceValeurBatterie> referenceValeurBatterie = referenceValeurBatterieRepository.findByDateAndModule(todaydate, module);
+        if(!referenceValeurBatterie.isEmpty()){
+            if(!referenceValeurBatterie.get(0).isDone()){
+                if(energie > referenceValeurBatterie.get(0).getValeurlimite()){
+                    NotificationModule notification = new NotificationModule();
+                    notification.setModule(module);
+                    notification.setTexte("l'energie de la batterie a atteint la limite de celle du reference a"+temps);
+                    notification.setTemps(temps);
+                    notificationModuleRepository.save(notification);
+                    referenceValeurBatterie.get(0).setDone(true);
+                    referenceValeurBatterieRepository.save(referenceValeurBatterie.get(0));
+                }
             }
         }
     }

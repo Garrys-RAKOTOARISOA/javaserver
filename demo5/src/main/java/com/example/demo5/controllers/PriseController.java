@@ -142,29 +142,31 @@
                     planningPriseRepository.save(listeprise.get(i));
                 }
 
-                ReferenceValeurPrise referencevaleurprise = referenceValeurPriseRepository.findByDateAndModule(today, module).get(0);
-                if(!referencevaleurprise.isDone()){
-                    if(consommation >= referencevaleurprise.getValeurlimite()){
+                List<ReferenceValeurPrise> referencevaleurprise = referenceValeurPriseRepository.findByDateAndModule(today, module);
+                if(!referencevaleurprise.get(0).isDone()){
+                    if(consommation >= referencevaleurprise.get(0).getValeurlimite()){
                         NotificationModule notification = new NotificationModule();
                         notification.setModule(module);
                         notification.setTexte("la consommation prise a depassee la limite de celle du reference a"+temps);
                         notification.setTemps(temps);
                         notificationModuleRepository.save(notification);
-                        referencevaleurprise.setDone(true);
-                        referenceValeurPriseRepository.save(referencevaleurprise);
+                        referencevaleurprise.get(0).setDone(true);
+                        referenceValeurPriseRepository.save(referencevaleurprise.get(0));
                     }
                 }
-                ReferenceDureePrise referencedureeprise = referenceDureePriseRepository.findByDateAndModule(today, module).get(0);
+                List<ReferenceDureePrise> referencedureeprise = referenceDureePriseRepository.findByDateAndModule(today, module);
                 DureeUtilisationPrise dureeUtilisationPrise = dureeUtilisationPriseRepository.findByDateAndModule(today, module).get(0);
-                if(!referencedureeprise.isDone()){
-                    if((dureeUtilisationPrise.getDuree()/3600) >= referencedureeprise.getDureelimite()){
-                        NotificationModule notification = new NotificationModule();
-                        notification.setModule(module);
-                        notification.setTexte("la duree limite d'utilisation du prise du reference est depasse a"+temps);
-                        notification.setTemps(temps);
-                        notificationModuleRepository.save(notification);
-                        referencevaleurprise.setDone(true);
-                        referenceValeurPriseRepository.save(referencevaleurprise);
+                if(!referencedureeprise.isEmpty()){
+                    if(!referencedureeprise.get(0).isDone()){
+                        if((dureeUtilisationPrise.getDuree()/3600) >= referencedureeprise.get(0).getDureelimite()){
+                            NotificationModule notification = new NotificationModule();
+                            notification.setModule(module);
+                            notification.setTexte("la duree limite d'utilisation du prise du reference est depasse a"+temps);
+                            notification.setTemps(temps);
+                            notificationModuleRepository.save(notification);
+                            referencevaleurprise.get(0).setDone(true);
+                            referenceValeurPriseRepository.save(referencevaleurprise.get(0));
+                        }
                     }
                 }
             }

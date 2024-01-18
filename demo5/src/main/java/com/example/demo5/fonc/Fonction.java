@@ -10,19 +10,12 @@ import java.util.Date;
 import java.util.List;
 
 public class Fonction {
-
-//    public static Timestamp getCurrentTimestamp() {
-//        ZonedDateTime zonedDateTime = ZonedDateTime.now(ZoneId.systemDefault());
-//        Timestamp roundedTimestamp = new Timestamp(zonedDateTime.toInstant().toEpochMilli() / 1000 * 1000);
-//        return roundedTimestamp;
-//    }
     public static Timestamp getCurrentTimestamp() {
         ZoneId antananarivoZoneId = ZoneId.of("Indian/Antananarivo");
         ZonedDateTime antananarivoTime = ZonedDateTime.now(antananarivoZoneId);
         Timestamp roundedTimestamp = new Timestamp(antananarivoTime.toInstant().toEpochMilli() / 1000 * 1000);
         return roundedTimestamp;
     }
-
 
     public static Date getCurrentDate() {
         return new Date();
