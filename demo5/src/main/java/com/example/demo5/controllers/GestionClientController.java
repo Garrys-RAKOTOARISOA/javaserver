@@ -2,9 +2,11 @@ package com.example.demo5.controllers;
 
 import com.example.demo5.models.Client;
 import com.example.demo5.models.ModuleSolar;
+import com.example.demo5.models.TypeBatterie;
 import com.example.demo5.models.UsefulEntity;
 import com.example.demo5.repositories.ClientRepository;
 import com.example.demo5.repositories.ModuleSolarRepository;
+import com.example.demo5.repositories.TypeBatterieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,11 +19,13 @@ import java.util.List;
 public class GestionClientController {
     private final ClientRepository clientRepository;
     private final ModuleSolarRepository moduleSolarRepository;
+    private final TypeBatterieRepository typeBatterieRepository;
 
     @Autowired
-    public GestionClientController(ClientRepository clientRepository, ModuleSolarRepository moduleSolarRepository){
+    public GestionClientController(ClientRepository clientRepository, ModuleSolarRepository moduleSolarRepository, TypeBatterieRepository typeBatterieRepository){
         this.clientRepository = clientRepository;
         this.moduleSolarRepository = moduleSolarRepository;
+        this.typeBatterieRepository = typeBatterieRepository;
     }
 
     @GetMapping("/clientbyid/{id}")
