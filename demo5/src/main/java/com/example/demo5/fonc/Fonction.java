@@ -76,4 +76,33 @@ public class Fonction {
     public static LocalDate todayDate() {
         return LocalDate.now();
     }
+
+    public static String castToFrDate(String date){
+        String toreturn = "";
+        if(date.equals("MONDAY")){
+            toreturn = "LUNDI";
+        }
+        if(date.equals("MONDAY")){
+            toreturn = "LUNDI";
+        }
+        if(date.equals("TUESDAY")){
+            toreturn = "MARDI";
+        }
+        if(date.equals("WEDNESDAY")){
+            toreturn = "MERCREDI";
+        }
+        if(date.equals("THURSDAY")){
+            toreturn = "JEUDI";
+        }
+        if(date.equals("FRIDAY")){
+            toreturn = "VENDREDI";
+        }
+        if(date.equals("SATURDAY")){
+            toreturn = "SAMEDI";
+        }
+        if(date.equals("SUNDAY")){
+            toreturn = "DIMANCHE";
+        }
+        return toreturn;
+    }
 }

@@ -205,37 +205,37 @@ public class PanneauController {
         ArrayList<Object> semaine4 = new ArrayList<>();
         ArrayList<Object> semaine5 = new ArrayList<>();
         for(int i=0; i<7; i++){
-            semaine1.add(listedates.get(i));
+            semaine1.add(listedates.get(i) + " " + Fonction.castToFrDate(listedates.get(i).getDayOfWeek().toString()));
             semaine1.add(toreturn[i][1]);
         }
         for(int i=7; i<14; i++){
-            semaine2.add(listedates.get(i));
+            semaine2.add(listedates.get(i) + " " + Fonction.castToFrDate(listedates.get(i).getDayOfWeek().toString()));
             semaine2.add(toreturn[i][1]);
         }
         for(int i=14; i<21; i++){
-            semaine3.add(listedates.get(i));
+            semaine3.add(listedates.get(i) + " " + Fonction.castToFrDate(listedates.get(i).getDayOfWeek().toString()));
             semaine3.add(toreturn[i][1]);
         }
         for(int i=21; i<28; i++){
-            semaine4.add(listedates.get(i));
+            semaine4.add(listedates.get(i) + " " + Fonction.castToFrDate(listedates.get(i).getDayOfWeek().toString()));
             semaine4.add(toreturn[i][1]);
         }
         if(listedates.size() == 29){
-            semaine5.add(listedates.get(28));
+            semaine5.add(listedates.get(28) + " " + Fonction.castToFrDate(listedates.get(28).getDayOfWeek().toString()));
             semaine5.add(toreturn[28][1]);
         }
         if(listedates.size() == 30){
-            semaine5.add(listedates.get(28));
+            semaine5.add(listedates.get(28) + " " + Fonction.castToFrDate(listedates.get(28).getDayOfWeek().toString()));
             semaine5.add(toreturn[28][1]);
-            semaine5.add(listedates.get(29));
+            semaine5.add(listedates.get(29) + " " + Fonction.castToFrDate(listedates.get(29).getDayOfWeek().toString()));
             semaine5.add(toreturn[29][1]);
         }
         if(listedates.size() == 31){
-            semaine5.add(listedates.get(28));
+            semaine5.add(listedates.get(28) + " " + Fonction.castToFrDate(listedates.get(28).getDayOfWeek().toString()));
             semaine5.add(toreturn[28][1]);
-            semaine5.add(listedates.get(29));
+            semaine5.add(listedates.get(29) + " " + Fonction.castToFrDate(listedates.get(29).getDayOfWeek().toString()));
             semaine5.add(toreturn[29][1]);
-            semaine5.add(listedates.get(30));
+            semaine5.add(listedates.get(30) + " " + Fonction.castToFrDate(listedates.get(30).getDayOfWeek().toString()));
             semaine5.add(toreturn[30][1]);
         }
         ProductionPanneauMensuelle productionPanneauMensuelle = new ProductionPanneauMensuelle();
