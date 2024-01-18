@@ -9,6 +9,8 @@ import com.example.demo5.repositories.TypeBatterieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/solartypebatterie")
 @CrossOrigin("*")
@@ -26,10 +28,15 @@ public class TypeBatterieController {
     @GetMapping("/changertypebatterie/{idbatterie}/{idclient}")
     public String changertypebatterie(@PathVariable("idbatterie") Long idbatterie, @PathVariable("idclient") Long idclient){
         Client client = clientRepository.findById(idclient).get();
-        ModuleSolar moduleSolar = moduleSolarRepository.findByClient(client);
+        ModuleSolar moduleSolar = moduleSolarRepository.findById(client.getModuleId()).get();
         TypeBatterie typeBatterie = typeBatterieRepository.findById(idbatterie).get();
         moduleSolar.setTypeBatterie(typeBatterie);
         moduleSolarRepository.save(moduleSolar);
         return "Type Batterie changee";
+    }
+
+    @GetMapping("/listebatterie")
+    public List<TypeBatterie> listebatterie(){
+        return typeBatterieRepository.findAll();
     }
 }
