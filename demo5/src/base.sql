@@ -251,3 +251,10 @@ create table referencevaleurprise(
     primary key(id),
     foreign key(idmodule) references module(id)
 );
+
+create table test(
+    id serial not null,
+    temps1 timestamp not null,
+    temps2 TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    primary key(id)
+);
