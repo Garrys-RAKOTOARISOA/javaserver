@@ -68,7 +68,7 @@ public class PlanningPriseController {
                     classSuccess.setMessage("planning insere");
                 }
             }
-            if(type == 2){
+            else if(type == 2){
                 boolean planningExiste = planningBatterieRepository.existsByModuleAndDatedebutLessThanEqualAndDatefinGreaterThanEqual(
                         module, datefin, datedebut);
 
