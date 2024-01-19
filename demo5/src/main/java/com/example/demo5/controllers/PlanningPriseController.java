@@ -50,6 +50,9 @@ public class PlanningPriseController {
         if(datefin.before(datedebut)){
             classSuccess.setMessage("dates invalides");
         }
+        else if(datefin.equals(datedebut)){
+            classSuccess.setMessage("dates invalides");
+        }
         else{
             if(type == 1){
                 boolean planningExiste = planningPriseRepository.existsByModuleAndDatedebutLessThanEqualAndDatefinGreaterThanEqual(
