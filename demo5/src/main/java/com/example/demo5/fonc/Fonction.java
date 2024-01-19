@@ -104,4 +104,12 @@ public class Fonction {
         }
         return toreturn;
     }
+
+    public static Timestamp StringToTimestamp(String date) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date dateObj = sdf.parse(date);
+
+        Timestamp timestamp = new Timestamp(dateObj.getTime());
+        return timestamp;
+    }
 }

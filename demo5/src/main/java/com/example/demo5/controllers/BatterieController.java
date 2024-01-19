@@ -182,7 +182,7 @@ public class BatterieController {
     }
 
     @GetMapping("/getTensionBatterieByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}/{seconde}")
-    public double getTensionBatterieByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure") int heure, @PathVariable("minute") int minute, @PathVariable("seconde") int seconde) throws ParseException {
+    public Object[] getTensionBatterieByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure") int heure, @PathVariable("minute") int minute, @PathVariable("seconde") int seconde) throws ParseException {
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         List<BatterieData> liste = batterieDataRepository.findByModule(module);
         Timestamp temps = Fonction.getTimestamp(Fonction.makeDate(date),heure,minute,seconde);
@@ -193,11 +193,14 @@ public class BatterieController {
                 toreturn = liste.get(i).getTension();
             }
         }
-        return toreturn;
+        Object[] ret = new Object[2];
+        ret[0] = temps;
+        ret[1] = toreturn;
+        return ret;
     }
 
     @GetMapping("/getEnergieBatterieByIdModuleAndTemps1Temps2/{idmodule}/{date}/{heure1}/{minute1}/{seconde1}/{heure2}/{minute2}/{seconde2}")
-    public double getEnergieBatterieByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure1") int heure1, @PathVariable("minute1") int minute1, @PathVariable("seconde1") int seconde1, @PathVariable("heure2") int heure2, @PathVariable("minute2") int minute2, @PathVariable("seconde2") int seconde2) throws ParseException {
+    public Object[] getEnergieBatterieByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure1") int heure1, @PathVariable("minute1") int minute1, @PathVariable("seconde1") int seconde1, @PathVariable("heure2") int heure2, @PathVariable("minute2") int minute2, @PathVariable("seconde2") int seconde2) throws ParseException {
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         List<BatterieData> liste = batterieDataRepository.findByModule(module);
         Timestamp temps1 = Fonction.getTimestamp(Fonction.makeDate(date),heure1,minute1,seconde1);
@@ -213,11 +216,15 @@ public class BatterieController {
                 energie2 = liste.get(i).getEnergie();
             }
         }
-        return energie2 - energie1;
+        Object[] toreturn = new Object[3];
+        toreturn[0] = temps1;
+        toreturn[1] = temps2;
+        toreturn[2] = energie2 - energie1;
+        return toreturn;
     }
 
     @GetMapping("/getCourantBatterieByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}/{seconde}")
-    public double getCourantBatterieByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure") int heure, @PathVariable("minute") int minute, @PathVariable("seconde") int seconde) throws ParseException {
+    public Object[] getCourantBatterieByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure") int heure, @PathVariable("minute") int minute, @PathVariable("seconde") int seconde) throws ParseException {
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         List<BatterieData> liste = batterieDataRepository.findByModule(module);
         Timestamp temps = Fonction.getTimestamp(Fonction.makeDate(date),heure,minute,seconde);
@@ -228,11 +235,14 @@ public class BatterieController {
                 toreturn = liste.get(i).getCourant();
             }
         }
-        return toreturn;
+        Object[] ret = new Object[2];
+        ret[0] = temps;
+        ret[1] = toreturn;
+        return ret;
     }
 
     @GetMapping("/getPuissanceBatterieByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}/{seconde}")
-    public double getPuissanceBatterieByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure") int heure, @PathVariable("minute") int minute, @PathVariable("seconde") int seconde) throws ParseException {
+    public Object[] getPuissanceBatterieByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure") int heure, @PathVariable("minute") int minute, @PathVariable("seconde") int seconde) throws ParseException {
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         List<BatterieData> liste = batterieDataRepository.findByModule(module);
         Timestamp temps = Fonction.getTimestamp(Fonction.makeDate(date),heure,minute, seconde);
@@ -243,7 +253,10 @@ public class BatterieController {
                 toreturn = liste.get(i).getPuissance();
             }
         }
-        return toreturn;
+        Object[] ret = new Object[2];
+        ret[0] = temps;
+        ret[1] = toreturn;
+        return ret;
     }
 
     @GetMapping("/listeBatterieDataByDateAndIdModule/{date}/{idmodule}")

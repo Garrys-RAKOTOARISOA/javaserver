@@ -63,7 +63,7 @@ public class PanneauController {
     }
 
     @GetMapping("/getTensionPanneauByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}/{seconde}")
-    public double getTensionPanneauByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure") int heure, @PathVariable("minute") int minute, @PathVariable("seconde") int seconde) throws ParseException {
+    public Object[] getTensionPanneauByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure") int heure, @PathVariable("minute") int minute, @PathVariable("seconde") int seconde) throws ParseException {
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         List<PanneauData> liste = panneauDataRepository.findByModule(module);
         Timestamp temps = Fonction.getTimestamp(Fonction.makeDate(date),heure,minute,seconde);
@@ -74,11 +74,14 @@ public class PanneauController {
                 toreturn = liste.get(i).getTension();
             }
         }
-        return toreturn;
+        Object[] ret = new Object[2];
+        ret[0] = temps;
+        ret[1] = toreturn;
+        return ret;
     }
 
     @GetMapping("/getProductionPanneauByIdModuleAndTemps1Temps2/{idmodule}/{date}/{heure1}/{minute1}/{seconde1}/{heure2}/{minute2}/{seconde2}")
-    public double getProductionPanneauByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure1") int heure1, @PathVariable("minute1") int minute1, @PathVariable("heure2") int heure2, @PathVariable("minute2") int minute2, @PathVariable("seconde1") int seconde1, @PathVariable("seconde2") int seconde2) throws ParseException {
+    public Object[] getProductionPanneauByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure1") int heure1, @PathVariable("minute1") int minute1, @PathVariable("heure2") int heure2, @PathVariable("minute2") int minute2, @PathVariable("seconde1") int seconde1, @PathVariable("seconde2") int seconde2) throws ParseException {
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         List<PanneauData> liste = panneauDataRepository.findByModule(module);
         Timestamp temps1 = Fonction.getTimestamp(Fonction.makeDate(date),heure1,minute1,seconde1);
@@ -94,11 +97,15 @@ public class PanneauController {
                 prod2 = liste.get(i).getProduction();
             }
         }
-        return prod2 - prod1;
+        Object[] toreturn = new Object[3];
+        toreturn[0] = temps1;
+        toreturn[1] = temps2;
+        toreturn[2] = prod2 - prod1;
+        return toreturn;
     }
 
     @GetMapping("/getCourantPanneauByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}/{seconde}")
-    public double getCourantPanneauByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure") int heure, @PathVariable("minute") int minute, @PathVariable("seconde") int seconde) throws ParseException {
+    public Object[] getCourantPanneauByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure") int heure, @PathVariable("minute") int minute, @PathVariable("seconde") int seconde) throws ParseException {
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         List<PanneauData> liste = panneauDataRepository.findByModule(module);
         Timestamp temps = Fonction.getTimestamp(Fonction.makeDate(date),heure,minute,seconde);
@@ -109,11 +116,14 @@ public class PanneauController {
                 toreturn = liste.get(i).getCourant();
             }
         }
-        return toreturn;
+        Object[] ret = new Object[2];
+        ret[0] = temps;
+        ret[1] = toreturn;
+        return ret;
     }
 
     @GetMapping("/getPuissancePanneauByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}/{seconde}")
-    public double getPuissancePanneauByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure") int heure, @PathVariable("minute") int minute, @PathVariable("seconde") int seconde) throws ParseException {
+    public Object[] getPuissancePanneauByIdModuleAndTemps(@PathVariable("idmodule") Long idmodule, @PathVariable("date") String date, @PathVariable("heure") int heure, @PathVariable("minute") int minute, @PathVariable("seconde") int seconde) throws ParseException {
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         List<PanneauData> liste = panneauDataRepository.findByModule(module);
         Timestamp temps = Fonction.getTimestamp(Fonction.makeDate(date),heure,minute,seconde);
@@ -124,7 +134,10 @@ public class PanneauController {
                 toreturn = liste.get(i).getPuissance();
             }
         }
-        return toreturn;
+        Object[] ret = new Object[2];
+        ret[0] = temps;
+        ret[1] = toreturn;
+        return ret;
     }
 
     @GetMapping("/listePanneauDataByDateAndIdModule/{date}/{idmodule}")
