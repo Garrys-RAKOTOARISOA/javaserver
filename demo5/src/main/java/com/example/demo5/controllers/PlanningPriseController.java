@@ -1,6 +1,7 @@
 package com.example.demo5.controllers;
 
 import com.example.demo5.fonc.Fonction;
+import com.example.demo5.models.ClassSuccess;
 import com.example.demo5.models.ModuleSolar;
 import com.example.demo5.models.PlanningBatterie;
 import com.example.demo5.models.PlanningPrise;
@@ -30,22 +31,24 @@ public class PlanningPriseController {
     }
 
     @GetMapping("/insertplanningpriseoubatterie/{type}/{idmodule}/{date}/{tempsdebut}/{tempsfin}/{valeur}")
-    public String insertplanning(@PathVariable("idmodule")Long idmodule,
-                                 @PathVariable("type") int type,
-                                 @PathVariable("date") String date,
-                               @PathVariable("tempsdebut") String tempsdebut,
-                               @PathVariable("tempsfin")String tempsfin,
-                               @PathVariable("valeur")double valeur) throws ParseException {
+    public ClassSuccess insertplanning(@PathVariable("idmodule")Long idmodule,
+                                       @PathVariable("type") int type,
+                                       @PathVariable("date") String date,
+                                       @PathVariable("tempsdebut") String tempsdebut,
+                                       @PathVariable("tempsfin")String tempsfin,
+                                       @PathVariable("valeur")double valeur) throws ParseException {
         // 1 = prise
         // 2 = batterie
+
+        ClassSuccess classSuccess = new ClassSuccess();
 
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
 
         Timestamp datedebut = Fonction.StringToTimestamp((date + " " + tempsdebut));
         Timestamp datefin = Fonction.StringToTimestamp((date + " " + tempsfin));
-        
+
         if(datefin.before(datedebut)){
-            return "dates invalides";
+            classSuccess.setMessage("dates invalides");
         }
         else{
             if(type == 1){
@@ -53,7 +56,7 @@ public class PlanningPriseController {
                         module, datefin, datedebut);
 
                 if (planningExiste) {
-                    return "il existe deja un planning a votre date";
+                    classSuccess.setMessage("il existe deja un planning a votre date");
                 }
                 else{
                     PlanningPrise planningPrise = new PlanningPrise();
@@ -62,7 +65,7 @@ public class PlanningPriseController {
                     planningPrise.setDatefin(datefin);
                     planningPrise.setValeurconsommation(valeur);
                     planningPriseRepository.save(planningPrise);
-                    return "planning insere";
+                    classSuccess.setMessage("planning insere");
                 }
             }
             if(type == 2){
@@ -70,7 +73,7 @@ public class PlanningPriseController {
                         module, datefin, datedebut);
 
                 if (planningExiste) {
-                    return "il existe deja un planning a votre date";
+                    classSuccess.setMessage("il existe deja un planning a votre date");
                 }
                 else{
                     PlanningBatterie planningBatterie = new PlanningBatterie();
@@ -79,13 +82,14 @@ public class PlanningPriseController {
                     planningBatterie.setDatefin(datefin);
                     planningBatterie.setValeurenergie(valeur);
                     planningBatterieRepository.save(planningBatterie);
-                    return "planning insere";
+                    classSuccess.setMessage("planning insere");
                 }
             }
             else {
-                return "type invalide";
+                classSuccess.setMessage("type invalide");
             }
         }
+        return classSuccess;
     }
 
     @GetMapping("/listeplanningbyidmodule/{idmodule}")

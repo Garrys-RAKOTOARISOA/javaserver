@@ -1,6 +1,7 @@
 package com.example.demo5.controllers;
 
 import com.example.demo5.fonc.Fonction;
+import com.example.demo5.models.ClassSuccess;
 import com.example.demo5.models.ModuleSolar;
 import com.example.demo5.models.ReferenceDureeBatterie;
 import com.example.demo5.models.ReferenceDureePrise;
@@ -30,10 +31,11 @@ public class ReferenceDureeController {
     }
 
     @GetMapping("/insertion/{choix}/{duree}/{idmodule}")
-    public String insertion(@PathVariable("choix") int choix, @PathVariable("duree") double duree, @PathVariable("idmodule") Long idmodule){
+    public ClassSuccess insertion(@PathVariable("choix") int choix, @PathVariable("duree") double duree, @PathVariable("idmodule") Long idmodule){
         // 1 = prise
         // 2 = batterie
         String message = "";
+        ClassSuccess classSuccess = new ClassSuccess();
         Date today = Fonction.getCurrentDate();
         ModuleSolar moduleSolar = moduleSolarRepository.findById(idmodule).get();
         if(choix==1){
@@ -64,7 +66,8 @@ public class ReferenceDureeController {
                 message += "Il existe deja une a cette date";
             }
         }
-        return message;
+        classSuccess.setMessage(message);
+        return classSuccess;
     }
 
     @GetMapping("/getreference/{choix}/{idmodule}")
@@ -88,8 +91,9 @@ public class ReferenceDureeController {
     }
 
     @GetMapping("/modification/{choix}/{duree}/{idmodule}")
-    public String modification(@PathVariable("choix") int choix, @PathVariable("duree") double duree, @PathVariable("idmodule") Long idmodule){
+    public ClassSuccess modification(@PathVariable("choix") int choix, @PathVariable("duree") double duree, @PathVariable("idmodule") Long idmodule){
         String text = "";
+        ClassSuccess classSuccess = new ClassSuccess();
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         Date today = Fonction.getCurrentDate();
         if(choix == 1){
@@ -104,6 +108,7 @@ public class ReferenceDureeController {
             referenceDureeBatterieRepository.save(referenceDureeBatterie);
             text += "batterie";
         }
-        return "Reference duree modifiee "+text;
+        classSuccess.setMessage("Reference duree modifiee "+text);
+        return classSuccess;
     }
 }

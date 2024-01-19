@@ -1,6 +1,7 @@
 package com.example.demo5.controllers;
 
 import com.example.demo5.fonc.Fonction;
+import com.example.demo5.models.ClassSuccess;
 import com.example.demo5.models.ModuleSolar;
 import com.example.demo5.models.ReferenceValeurBatterie;
 import com.example.demo5.models.ReferenceValeurPrise;
@@ -31,9 +32,11 @@ public class ReferenceValeurController {
     }
 
     @GetMapping("/insertion/{choix}/{valeur}/{idmodule}")
-    public String insertion(@PathVariable("choix") int choix, @PathVariable("valeur") double valeur, @PathVariable("idmodule") Long idmodule){
+    public ClassSuccess insertion(@PathVariable("choix") int choix, @PathVariable("valeur") double valeur, @PathVariable("idmodule") Long idmodule){
         // 1 = prise
         // 2 = batterie
+
+        ClassSuccess classSuccess = new ClassSuccess();
 
         String message = "";
         Date today = Fonction.getCurrentDate();
@@ -67,7 +70,8 @@ public class ReferenceValeurController {
                 message += "Il existe deja une a cette date";
             }
         }
-        return message;
+        classSuccess.setMessage(message);
+        return classSuccess;
     }
 
     @GetMapping("/getreference/{choix}/{idmodule}")
@@ -91,8 +95,9 @@ public class ReferenceValeurController {
     }
 
     @GetMapping("/modification/{choix}/{valeur}/{idmodule}")
-    public String modification(@PathVariable("choix") int choix, @PathVariable("valeur") double valeur, @PathVariable("idmodule") Long idmodule){
+    public ClassSuccess modification(@PathVariable("choix") int choix, @PathVariable("valeur") double valeur, @PathVariable("idmodule") Long idmodule){
         String text = "";
+        ClassSuccess classSuccess = new ClassSuccess();
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         Date today = Fonction.getCurrentDate();
         if(choix == 1){
@@ -107,6 +112,7 @@ public class ReferenceValeurController {
             referenceValeurBatterieRepository.save(referenceValeurBatterie);
             text += "batterie";
         }
-        return "Reference valeur modifiee "+text;
+        classSuccess.setMessage("Reference valeur modifiee "+text);
+        return classSuccess;
     }
 }
