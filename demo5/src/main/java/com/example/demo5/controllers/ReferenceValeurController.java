@@ -69,4 +69,44 @@ public class ReferenceValeurController {
         }
         return message;
     }
+
+    @GetMapping("/getreference/{choix}/{idmodule}")
+    public Object getreference(@PathVariable("choix") int choix, @PathVariable("idmodule") Long idmodule){
+        ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
+        Date today = Fonction.getCurrentDate();
+        Object toreturn = new Object();
+        if(choix == 1){
+            List<ReferenceValeurPrise> referenceValeurPrise = referenceValeurPriseRepository.findByDateAndModule(today,module);
+            if(!referenceValeurPrise.isEmpty()){
+                toreturn = referenceValeurPrise.get(0);
+            }
+        }
+        if(choix == 2){
+            List<ReferenceValeurBatterie> referenceValeurBatterie = referenceValeurBatterieRepository.findByDateAndModule(today,module);
+            if(!referenceValeurBatterie.isEmpty()){
+                toreturn = referenceValeurBatterie.get(0);
+            }
+        }
+        return toreturn;
+    }
+
+    @GetMapping("/modification/{choix}/{valeur}/{idmodule}")
+    public String modification(@PathVariable("choix") int choix, @PathVariable("valeur") double valeur, @PathVariable("idmodule") Long idmodule){
+        String text = "";
+        ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
+        Date today = Fonction.getCurrentDate();
+        if(choix == 1){
+            ReferenceValeurPrise referenceValeurPrise = referenceValeurPriseRepository.findByDateAndModule(today,module).get(0);
+            referenceValeurPrise.setValeurlimite(valeur);
+            referenceValeurPriseRepository.save(referenceValeurPrise);
+            text += "prise";
+        }
+        if(choix == 2){
+            ReferenceValeurBatterie referenceValeurBatterie = referenceValeurBatterieRepository.findByDateAndModule(today,module).get(0);
+            referenceValeurBatterie.setValeurlimite(valeur);
+            referenceValeurBatterieRepository.save(referenceValeurBatterie);
+            text += "batterie";
+        }
+        return "Reference valeur modifiee "+text;
+    }
 }
