@@ -43,43 +43,48 @@ public class PlanningPriseController {
 
         Timestamp datedebut = Fonction.StringToTimestamp((date + " " + tempsdebut));
         Timestamp datefin = Fonction.StringToTimestamp((date + " " + tempsfin));
-
-        if(type == 1){
-            boolean planningExiste = planningPriseRepository.existsByModuleAndDatedebutLessThanEqualAndDatefinGreaterThanEqual(
-                    module, datefin, datedebut);
-
-            if (planningExiste) {
-                return "il existe deja un planning a votre date";
-            }
-            else{
-                PlanningPrise planningPrise = new PlanningPrise();
-                planningPrise.setModule(module);
-                planningPrise.setDatedebut(datedebut);
-                planningPrise.setDatefin(datefin);
-                planningPrise.setValeurconsommation(valeur);
-                planningPriseRepository.save(planningPrise);
-                return "planning insere";
-            }
+        
+        if(datefin.before(datedebut)){
+            return "dates invalides";
         }
-        if(type == 2){
-            boolean planningExiste = planningBatterieRepository.existsByModuleAndDatedebutLessThanEqualAndDatefinGreaterThanEqual(
-                    module, datefin, datedebut);
+        else{
+            if(type == 1){
+                boolean planningExiste = planningPriseRepository.existsByModuleAndDatedebutLessThanEqualAndDatefinGreaterThanEqual(
+                        module, datefin, datedebut);
 
-            if (planningExiste) {
-                return "il existe deja un planning a votre date";
+                if (planningExiste) {
+                    return "il existe deja un planning a votre date";
+                }
+                else{
+                    PlanningPrise planningPrise = new PlanningPrise();
+                    planningPrise.setModule(module);
+                    planningPrise.setDatedebut(datedebut);
+                    planningPrise.setDatefin(datefin);
+                    planningPrise.setValeurconsommation(valeur);
+                    planningPriseRepository.save(planningPrise);
+                    return "planning insere";
+                }
             }
-            else{
-                PlanningBatterie planningBatterie = new PlanningBatterie();
-                planningBatterie.setModule(module);
-                planningBatterie.setDatedebut(datedebut);
-                planningBatterie.setDatefin(datefin);
-                planningBatterie.setValeurenergie(valeur);
-                planningBatterieRepository.save(planningBatterie);
-                return "planning insere";
+            if(type == 2){
+                boolean planningExiste = planningBatterieRepository.existsByModuleAndDatedebutLessThanEqualAndDatefinGreaterThanEqual(
+                        module, datefin, datedebut);
+
+                if (planningExiste) {
+                    return "il existe deja un planning a votre date";
+                }
+                else{
+                    PlanningBatterie planningBatterie = new PlanningBatterie();
+                    planningBatterie.setModule(module);
+                    planningBatterie.setDatedebut(datedebut);
+                    planningBatterie.setDatefin(datefin);
+                    planningBatterie.setValeurenergie(valeur);
+                    planningBatterieRepository.save(planningBatterie);
+                    return "planning insere";
+                }
             }
-        }
-        else {
-            return "type invalide";
+            else {
+                return "type invalide";
+            }
         }
     }
 
