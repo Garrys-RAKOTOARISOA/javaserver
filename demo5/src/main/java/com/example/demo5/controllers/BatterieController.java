@@ -128,7 +128,7 @@ public class BatterieController {
                     }
                     listeplanning.get(i).setDone(true);
                 }
-                if((courant==0) && temps.after(tempsDebut) && temps.before(tempsFin)){
+                if((courant==0) && (temps.after(tempsDebut) && temps.before(tempsFin))){
                     listeplanning.get(i).setDone(true);
                 }
                 if(courant >= listeplanning.get(i).getValeurenergie()){

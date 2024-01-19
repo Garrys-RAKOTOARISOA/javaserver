@@ -143,15 +143,17 @@
                 }
 
                 List<ReferenceValeurPrise> referencevaleurprise = referenceValeurPriseRepository.findByDateAndModule(today, module);
-                if(!referencevaleurprise.get(0).isDone()){
-                    if(consommation >= referencevaleurprise.get(0).getValeurlimite()){
-                        NotificationModule notification = new NotificationModule();
-                        notification.setModule(module);
-                        notification.setTexte("la consommation prise a depassee la limite de celle du reference a"+temps);
-                        notification.setTemps(temps);
-                        notificationModuleRepository.save(notification);
-                        referencevaleurprise.get(0).setDone(true);
-                        referenceValeurPriseRepository.save(referencevaleurprise.get(0));
+                if(!referencevaleurprise.isEmpty()){
+                    if(!referencevaleurprise.get(0).isDone()){
+                        if(consommation >= referencevaleurprise.get(0).getValeurlimite()){
+                            NotificationModule notification = new NotificationModule();
+                            notification.setModule(module);
+                            notification.setTexte("la consommation prise a depassee la limite de celle du reference a"+temps);
+                            notification.setTemps(temps);
+                            notificationModuleRepository.save(notification);
+                            referencevaleurprise.get(0).setDone(true);
+                            referenceValeurPriseRepository.save(referencevaleurprise.get(0));
+                        }
                     }
                 }
                 List<ReferenceDureePrise> referencedureeprise = referenceDureePriseRepository.findByDateAndModule(today, module);
