@@ -87,11 +87,11 @@ public class BatterieController {
         }
 
         CouleurBoutonBatterie couleurBoutonBatterie = couleurBoutonBatterieRepository.findByModule(module);
-        if(courant==0){
-            couleurBoutonBatterie.setCouleur("rouge");
+        if(courant>0){
+            couleurBoutonBatterie.setCouleur("vert");
         }
         else{
-            couleurBoutonBatterie.setCouleur("vert");
+            couleurBoutonBatterie.setCouleur("rouge");
         }
         couleurBoutonBatterieRepository.save(couleurBoutonBatterie);
 
@@ -164,6 +164,7 @@ public class BatterieController {
                 }
             }
         }
+        relaisBatterieRepository.save(relais);
     }
 
     @GetMapping("/getTensionBatterieByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}/{seconde}")

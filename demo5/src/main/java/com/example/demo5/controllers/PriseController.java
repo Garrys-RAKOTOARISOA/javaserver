@@ -84,11 +84,11 @@
             }
 
             CouleurBoutonPrise couleurBoutonPrise = couleurBoutonPriseRepository.findByModule(module);
-            if(courant==0){
-                couleurBoutonPrise.setCouleur("rouge");
+            if(courant>0){
+                couleurBoutonPrise.setCouleur("vert");
             }
             else{
-                couleurBoutonPrise.setCouleur("vert");
+                couleurBoutonPrise.setCouleur("rouge");
             }
             couleurBoutonPriseRepository.save(couleurBoutonPrise);
 
@@ -157,6 +157,7 @@
                     }
                 }
             }
+            relaisPriseRepository.save(relais);
         }
 
         @GetMapping("/getTensionPriseByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}/{seconde}")
