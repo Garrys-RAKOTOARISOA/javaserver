@@ -107,12 +107,7 @@ public class BatterieController {
                     notification.setTexte("Le temps de planification sur la batterie commence  a "+temps);
                     notification.setModule(module);
                     notificationModuleRepository.save(notification);
-                    if(relais.getState()){
-                        relais.setState(false);
-                    }
-                    else{
-                        relais.setState(true);
-                    }
+                    relais.setState("HIGH");
                 }
                 if(tempsFin.equals(temps)&&courant!=0){
                     NotificationModule notification = new NotificationModule();
@@ -120,12 +115,7 @@ public class BatterieController {
                     notification.setTexte("Le temps d’utilisation planifié sur votre batterie s’est écoulé a "+temps);
                     notification.setModule(module);
                     notificationModuleRepository.save(notification);
-                    if(relais.getState()){
-                        relais.setState(false);
-                    }
-                    else{
-                        relais.setState(true);
-                    }
+                    relais.setState("LOW");
                     listeplanning.get(i).setDone(true);
                 }
                 if((courant==0) && (temps.after(tempsDebut) && temps.before(tempsFin))){
@@ -137,12 +127,7 @@ public class BatterieController {
                     notification.setTexte("La valeur d'energie dans la planification de la batterie a ete atteint, valeur= "+listeplanning.get(i).getValeurenergie()+" V a "+temps);
                     notification.setModule(module);
                     notificationModuleRepository.save(notification);
-                    if(relais.getState()){
-                        relais.setState(false);
-                    }
-                    else{
-                        relais.setState(true);
-                    }
+                    relais.setState("LOW");
                     listeplanning.get(i).setDone(true);
                 }
                 planningBatterieRepository.save(listeplanning.get(i));

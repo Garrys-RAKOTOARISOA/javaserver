@@ -24,7 +24,7 @@ public class RelaisPrise {
     }
 
     @Column(nullable = false)
-    private Boolean state = false;
+    private String state;
 
     public Long getId() {
         return id;
@@ -42,11 +42,11 @@ public class RelaisPrise {
         this.module = module;
     }
 
-    public Boolean getState() {
+    public String getState() {
         return state;
     }
 
-    public void setState(Boolean state) {
+    public void setState(String state) {
         this.state = state;
     }
 }

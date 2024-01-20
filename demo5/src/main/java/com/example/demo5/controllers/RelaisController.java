@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 public class RelaisController {
     private final RelaisBatterieRepository relaisBatterieRepository;
     private final RelaisPriseRepository relaisPriseRepository;
-
     private final RelaisPanneauRepository relaisPanneauRepository;
     private final ModuleSolarRepository moduleSolarRepository;
 
@@ -30,11 +29,11 @@ public class RelaisController {
     public String switchrelaisbatterie(@PathVariable("idmodule") Long idmodule){
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         RelaisBatterie relais = relaisBatterieRepository.findByModule(module);
-        if(relais.getState()){
-            relais.setState(false);
+        if(relais.getState().equals("HIGH")){
+            relais.setState("LOW");
         }
         else{
-            relais.setState(true);
+            relais.setState("HIGH");
         }
         relaisBatterieRepository.save(relais);
         return "Switched batterie";
@@ -44,11 +43,11 @@ public class RelaisController {
     public String switchrelaisprise(@PathVariable("idmodule") Long idmodule){
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         RelaisPrise relais = relaisPriseRepository.findByModule(module);
-        if(relais.getState()){
-            relais.setState(false);
+        if(relais.getState().equals("HIGH")){
+            relais.setState("LOW");
         }
         else{
-            relais.setState(true);
+            relais.setState("HIGH");
         }
         relaisPriseRepository.save(relais);
         return "Switched prise";
@@ -58,11 +57,11 @@ public class RelaisController {
     public String switchrelaispanneau(@PathVariable("idmodule") Long idmodule){
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         RelaisPanneau relais = relaisPanneauRepository.findByModule(module);
-        if(relais.getState()){
-            relais.setState(false);
+        if(relais.getState().equals("HIGH")){
+            relais.setState("LOW");
         }
         else{
-            relais.setState(true);
+            relais.setState("HIGH");
         }
         relaisPanneauRepository.save(relais);
         return "Switched Panneau";

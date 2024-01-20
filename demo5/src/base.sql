@@ -257,3 +257,7 @@ create table test(
     message varchar(500) not null,
     primary key(id)
 );
+
+ALTER TABLE relaisbatterie
+ALTER COLUMN state
+TYPE varchar(100);

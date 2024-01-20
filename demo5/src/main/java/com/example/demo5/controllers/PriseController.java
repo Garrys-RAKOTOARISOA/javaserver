@@ -104,12 +104,7 @@
                         notification.setTexte("Le temps de planification sur la prise commence a "+temps);
                         notification.setModule(module);
                         notificationModuleRepository.save(notification);
-                        if(relais.getState()){
-                            relais.setState(false);
-                        }
-                        else{
-                            relais.setState(true);
-                        }
+                        relais.setState("HIGH");
                     }
                     if(tempsFin.equals(temps)&&courant!=0){
                         NotificationModule notification = new NotificationModule();
@@ -117,12 +112,7 @@
                         notification.setTexte("Le temps d’utilisation planifié sur votre prise s’est écoulé a "+temps);
                         notification.setModule(module);
                         notificationModuleRepository.save(notification);
-                        if(relais.getState()){
-                            relais.setState(false);
-                        }
-                        else{
-                            relais.setState(true);
-                        }
+                        relais.setState("LOW");
                         listeprise.get(i).setDone(true);
                     }
                     if(courant >= listeprise.get(i).getValeurconsommation()){
@@ -131,12 +121,7 @@
                         notification.setTexte("La consommation a atteint la moyenne de la valeur qui devra être utilisé chaque jour, valeur = "+listeprise.get(i).getValeurconsommation()+" a "+temps);
                         notification.setModule(module);
                         notificationModuleRepository.save(notification);
-                        if(relais.getState()){
-                            relais.setState(false);
-                        }
-                        else{
-                            relais.setState(true);
-                        }
+                        relais.setState("LOW");
                         listeprise.get(i).setDone(true);
                     }
                     planningPriseRepository.save(listeprise.get(i));
