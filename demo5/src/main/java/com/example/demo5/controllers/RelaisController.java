@@ -1,9 +1,6 @@
 package com.example.demo5.controllers;
 
-import com.example.demo5.models.ModuleSolar;
-import com.example.demo5.models.RelaisBatterie;
-import com.example.demo5.models.RelaisPanneau;
-import com.example.demo5.models.RelaisPrise;
+import com.example.demo5.models.*;
 import com.example.demo5.repositories.ModuleSolarRepository;
 import com.example.demo5.repositories.RelaisBatterieRepository;
 import com.example.demo5.repositories.RelaisPanneauRepository;

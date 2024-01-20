@@ -4,12 +4,10 @@ import com.example.demo5.fonc.Fonction;
 import com.example.demo5.models.TestR;
 import com.example.demo5.repositories.TestRRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/test")
@@ -22,13 +20,16 @@ public class TestRController {
         this.testRRepository = testRRepository;
     }
 
-    @GetMapping("/create")
-    public String create(){
-        TestR testR = new TestR();
-        Timestamp timestamp = Fonction.getCurrentTimestamp();
-        testR.setTemps1(timestamp);
-        System.out.println("temps="+timestamp);
-        testRRepository.save(testR);
+    @GetMapping("/settest/{message}")
+    public String create(@PathVariable("message") String message){
+        List<TestR> test = (List<TestR>) testRRepository.findAll();
+        test.get(0).setMessage(message);
+        testRRepository.save(test.get(0));
         return "Test inseree";
+    }
+
+    @GetMapping("/gettest")
+    public TestR gettest(){
+        return ((List<TestR>) testRRepository.findAll()).get(0);
     }
 }

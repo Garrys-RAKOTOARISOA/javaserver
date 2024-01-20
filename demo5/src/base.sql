@@ -254,7 +254,6 @@ create table referencevaleurprise(
 
 create table test(
     id serial not null,
-    temps1 timestamp not null,
-    temps2 TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    message varchar(500) not null,
     primary key(id)
 );

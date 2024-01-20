@@ -11,10 +11,7 @@ public class TestR {
     private Long id;
 
     @Column(nullable = false)
-    private Timestamp temps1;
-
-    @Column(insertable = false, updatable = true)
-    private Timestamp temps2;
+    private String message;
 
     public Long getId() {
         return id;
@@ -24,19 +21,11 @@ public class TestR {
         this.id = id;
     }
 
-    public Timestamp getTemps1() {
-        return temps1;
+    public String getMessage() {
+        return message;
     }
 
-    public void setTemps1(Timestamp temps1) {
-        this.temps1 = temps1;
-    }
-
-    public Timestamp getTemps2() {
-        return temps2;
-    }
-
-    public void setTemps2(Timestamp temps2) {
-        this.temps2 = temps2;
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
