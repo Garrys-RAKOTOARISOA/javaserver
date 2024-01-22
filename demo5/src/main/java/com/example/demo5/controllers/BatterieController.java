@@ -101,6 +101,8 @@ public class BatterieController {
             if(!listeplanning.get(i).getDone()){
                 Timestamp tempsFin = new Timestamp(listeplanning.get(i).getDatefin().getTime() / 1000 * 1000);
                 Timestamp tempsDebut = new Timestamp(listeplanning.get(i).getDatedebut().getTime() / 1000 * 1000);
+                System.out.println("TEMPS DEBUT="+tempsDebut);
+                System.out.println("TEMPS ACTUEL="+temps);
                 if((tempsDebut.equals(temps))&&(courant==0)){
                     NotificationModule notification = new NotificationModule();
                     notification.setTemps(temps);
