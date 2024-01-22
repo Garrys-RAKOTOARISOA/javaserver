@@ -84,13 +84,13 @@
             }
 
             CouleurBoutonPrise couleurBoutonPrise = couleurBoutonPriseRepository.findByModule(module);
-            if(courant>0){
-                couleurBoutonPrise.setCouleur("green");
-            }
-            else{
-                couleurBoutonPrise.setCouleur("red");
-            }
-            couleurBoutonPriseRepository.save(couleurBoutonPrise);
+//            if(courant>0){
+//                couleurBoutonPrise.setCouleur("green");
+//            }
+//            else{
+//                couleurBoutonPrise.setCouleur("red");
+//            }
+//            couleurBoutonPriseRepository.save(couleurBoutonPrise);
 
             RelaisPrise relais = relaisPriseRepository.findByModule(module);
             List<PlanningPrise> listeprise = planningPriseRepository.findByModuleOrderByDatedebut(module);

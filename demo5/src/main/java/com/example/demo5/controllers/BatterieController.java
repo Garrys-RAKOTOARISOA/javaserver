@@ -87,13 +87,13 @@ public class BatterieController {
         }
 
         CouleurBoutonBatterie couleurBoutonBatterie = couleurBoutonBatterieRepository.findByModule(module);
-        if(courant>0){
-            couleurBoutonBatterie.setCouleur("green");
-        }
-        else{
-            couleurBoutonBatterie.setCouleur("red");
-        }
-        couleurBoutonBatterieRepository.save(couleurBoutonBatterie);
+//        if(courant>0){
+//            couleurBoutonBatterie.setCouleur("green");
+//        }
+//        else{
+//            couleurBoutonBatterie.setCouleur("red");
+//        }
+//        couleurBoutonBatterieRepository.save(couleurBoutonBatterie);
 
         RelaisBatterie relais = relaisBatterieRepository.findByModule(module);
         List<PlanningBatterie> listeplanning = planningBatterieRepository.findByModuleOrderByDatedebut(module);
