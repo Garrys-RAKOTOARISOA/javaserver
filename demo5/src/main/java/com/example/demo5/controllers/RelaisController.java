@@ -37,12 +37,15 @@ public class RelaisController {
         if(couleurBoutonBatterie.getCouleur().equals("green")){
             toreturn.setMessage("Relais Batterie Eteint");
             relais.setState("HIGH");
+            couleurBoutonBatterie.setCouleur("red");
         }
         else {
             toreturn.setMessage("Relais Batterie Allumee");
             relais.setState("LOW");
+            couleurBoutonBatterie.setCouleur("green");
         }
         relaisBatterieRepository.save(relais);
+        couleurBoutonBatterieRepository.save(couleurBoutonBatterie);
         return toreturn;
     }
 
@@ -55,12 +58,15 @@ public class RelaisController {
         if(couleurBoutonPrise.getCouleur().equals("green")){
             toreturn.setMessage("Relais prise eteint");
             relais.setState("HIGH");
+            couleurBoutonPrise.setCouleur("red");
         }
         else{
             toreturn.setMessage("Relais prise allumee");
             relais.setState("LOW");
+            couleurBoutonPrise.setCouleur("green");
         }
         relaisPriseRepository.save(relais);
+        couleurBoutonPriseRepository.save(couleurBoutonPrise);
         return toreturn;
     }
 
@@ -73,12 +79,15 @@ public class RelaisController {
         if(couleurBoutonPanneau.getCouleur().equals("green")){
             toreturn.setMessage("Relais panneau eteint");
             relais.setState("HIGH");
+            couleurBoutonPanneau.setCouleur("red");
         }
         else{
             relais.setState("LOW");
             toreturn.setMessage("Relais panneau allumee");
+            couleurBoutonPanneau.setCouleur("green");
         }
         relaisPanneauRepository.save(relais);
+        couleurBoutonPanneauRepository.save(couleurBoutonPanneau);
         return toreturn;
     }
 
