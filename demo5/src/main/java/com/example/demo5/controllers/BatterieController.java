@@ -108,6 +108,7 @@ public class BatterieController {
                     notification.setModule(module);
                     notificationModuleRepository.save(notification);
                     relais.setState("LOW");
+                    couleurBoutonBatterie.setCouleur("green");
                 }
                 if(tempsFin.equals(temps)&&courant!=0){
                     NotificationModule notification = new NotificationModule();
@@ -116,6 +117,7 @@ public class BatterieController {
                     notification.setModule(module);
                     notificationModuleRepository.save(notification);
                     relais.setState("HIGH");
+                    couleurBoutonBatterie.setCouleur("red");
                     listeplanning.get(i).setDone(true);
                 }
                 if((courant==0) && (temps.after(tempsDebut) && temps.before(tempsFin))){
@@ -128,6 +130,7 @@ public class BatterieController {
                     notification.setModule(module);
                     notificationModuleRepository.save(notification);
                     relais.setState("HIGH");
+                    couleurBoutonBatterie.setCouleur("red");
                     listeplanning.get(i).setDone(true);
                 }
                 planningBatterieRepository.save(listeplanning.get(i));
@@ -165,6 +168,7 @@ public class BatterieController {
             }
         }
         relaisBatterieRepository.save(relais);
+        couleurBoutonBatterieRepository.save(couleurBoutonBatterie);
     }
 
     @GetMapping("/getTensionBatterieByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}/{seconde}")

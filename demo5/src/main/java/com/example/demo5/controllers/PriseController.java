@@ -105,6 +105,7 @@
                         notification.setModule(module);
                         notificationModuleRepository.save(notification);
                         relais.setState("LOW");
+                        couleurBoutonPrise.setCouleur("green");
                     }
                     if(tempsFin.equals(temps)&&courant!=0){
                         NotificationModule notification = new NotificationModule();
@@ -113,6 +114,7 @@
                         notification.setModule(module);
                         notificationModuleRepository.save(notification);
                         relais.setState("HIGH");
+                        couleurBoutonPrise.setCouleur("red");
                         listeprise.get(i).setDone(true);
                     }
                     if(courant >= listeprise.get(i).getValeurconsommation()){
@@ -122,6 +124,7 @@
                         notification.setModule(module);
                         notificationModuleRepository.save(notification);
                         relais.setState("HIGH");
+                        couleurBoutonPrise.setCouleur("red");
                         listeprise.get(i).setDone(true);
                     }
                     planningPriseRepository.save(listeprise.get(i));
@@ -158,6 +161,7 @@
                 }
             }
             relaisPriseRepository.save(relais);
+            couleurBoutonPriseRepository.save(couleurBoutonPrise);
         }
 
         @GetMapping("/getTensionPriseByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}/{seconde}")

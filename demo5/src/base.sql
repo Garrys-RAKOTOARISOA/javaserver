@@ -261,3 +261,6 @@ create table test(
 ALTER TABLE relaisbatterie
 ALTER COLUMN state
 TYPE varchar(100);
+
+insert into planningbatterie(idmodule,datedebut,datefin,valeurenergie)
+values (1,'2024-01-22 15:50:00','2024-01-22 15:52:00',500);
