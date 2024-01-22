@@ -29,63 +29,87 @@ public class RelaisController {
     }
 
     @GetMapping("/switchrelaisbatterie/{idmodule}")
-    public ClassSuccess switchrelaisbatterie(@PathVariable("idmodule") Long idmodule){
+    public ClassSuccess switchrelaisbatterie(@PathVariable("idmodule") Long idmodule) {
         ClassSuccess toreturn = new ClassSuccess();
-        ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
+        ModuleSolar module = moduleSolarRepository.findById(idmodule).orElse(null);
+
+        if (module == null) {
+            // Gérer le cas où le module n'est pas trouvé
+            toreturn.setMessage("Module non trouvé");
+            return toreturn;
+        }
+
         RelaisBatterie relais = relaisBatterieRepository.findByModule(module);
         CouleurBoutonBatterie couleurBoutonBatterie = couleurBoutonBatterieRepository.findByModule(module);
-        if(couleurBoutonBatterie.getCouleur().equals("green")){
-            toreturn.setMessage("Relais Batterie Eteint");
+
+        if (couleurBoutonBatterie.getCouleur().equals("green")) {
+            toreturn.setMessage("Relais Batterie éteint");
             relais.setState("HIGH");
             couleurBoutonBatterie.setCouleur("red");
-        }
-        if(couleurBoutonBatterie.getCouleur().equals("red"))  {
-            toreturn.setMessage("Relais Batterie Allumee");
+        } else {
+            toreturn.setMessage("Relais Batterie allumé");
             relais.setState("LOW");
             couleurBoutonBatterie.setCouleur("green");
         }
+
         relaisBatterieRepository.save(relais);
         couleurBoutonBatterieRepository.save(couleurBoutonBatterie);
         return toreturn;
     }
 
     @GetMapping("/switchrelaisprise/{idmodule}")
-    public ClassSuccess switchrelaisprise(@PathVariable("idmodule") Long idmodule){
+    public ClassSuccess switchrelaisprise(@PathVariable("idmodule") Long idmodule) {
         ClassSuccess toreturn = new ClassSuccess();
-        ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
+        ModuleSolar module = moduleSolarRepository.findById(idmodule).orElse(null);
+
+        if (module == null) {
+            // Gérer le cas où le module n'est pas trouvé
+            toreturn.setMessage("Module non trouvé");
+            return toreturn;
+        }
+
         RelaisPrise relais = relaisPriseRepository.findByModule(module);
         CouleurBoutonPrise couleurBoutonPrise = couleurBoutonPriseRepository.findByModule(module);
-        if(couleurBoutonPrise.getCouleur().equals("green")){
-            toreturn.setMessage("Relais prise eteint");
+
+        if (couleurBoutonPrise.getCouleur().equals("green")) {
+            toreturn.setMessage("Relais prise éteint");
             relais.setState("HIGH");
             couleurBoutonPrise.setCouleur("red");
-        }
-        if(couleurBoutonPrise.getCouleur().equals("red")){
-            toreturn.setMessage("Relais prise allumee");
+        } else {
+            toreturn.setMessage("Relais prise allumé");
             relais.setState("LOW");
             couleurBoutonPrise.setCouleur("green");
         }
+
         relaisPriseRepository.save(relais);
         couleurBoutonPriseRepository.save(couleurBoutonPrise);
         return toreturn;
     }
 
     @GetMapping("/switchrelaispanneau/{idmodule}")
-    public ClassSuccess switchrelaispanneau(@PathVariable("idmodule") Long idmodule){
+    public ClassSuccess switchrelaispanneau(@PathVariable("idmodule") Long idmodule) {
         ClassSuccess toreturn = new ClassSuccess();
-        ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
+        ModuleSolar module = moduleSolarRepository.findById(idmodule).orElse(null);
+
+        if (module == null) {
+            // Gérer le cas où le module n'est pas trouvé
+            toreturn.setMessage("Module non trouvé");
+            return toreturn;
+        }
+
         RelaisPanneau relais = relaisPanneauRepository.findByModule(module);
         CouleurBoutonPanneau couleurBoutonPanneau = couleurBoutonPanneauRepository.findByModule(module);
-        if(couleurBoutonPanneau.getCouleur().equals("green")){
-            toreturn.setMessage("Relais panneau eteint");
+
+        if (couleurBoutonPanneau.getCouleur().equals("green")) {
+            toreturn.setMessage("Relais panneau éteint");
             relais.setState("HIGH");
             couleurBoutonPanneau.setCouleur("red");
-        }
-        if(couleurBoutonPanneau.getCouleur().equals("red")){
+        } else {
+            toreturn.setMessage("Relais panneau allumé");
             relais.setState("LOW");
-            toreturn.setMessage("Relais panneau allumee");
             couleurBoutonPanneau.setCouleur("green");
         }
+
         relaisPanneauRepository.save(relais);
         couleurBoutonPanneauRepository.save(couleurBoutonPanneau);
         return toreturn;
