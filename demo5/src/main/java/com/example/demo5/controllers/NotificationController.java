@@ -1,6 +1,7 @@
 package com.example.demo5.controllers;
 
 import com.example.demo5.fonc.Fonction;
+import com.example.demo5.models.ClassSuccess;
 import com.example.demo5.models.ModuleSolar;
 import com.example.demo5.models.NotificationModule;
 import com.example.demo5.repositories.ModuleSolarRepository;
@@ -8,6 +9,7 @@ import com.example.demo5.repositories.NotificationModuleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -39,16 +41,31 @@ public class NotificationController {
     }
 
     @GetMapping("/traitementnotification/{id}")
-    public String traitementnotif(@PathVariable("id") Long id){
+    public ClassSuccess traitementnotif(@PathVariable("id") Long id){
+        ClassSuccess toreturn = new ClassSuccess();
         NotificationModule notification = notificationModuleRepository.findById(id).get();
         notification.setSeen(true);
         notificationModuleRepository.save(notification);
-        return "Notification traitee";
+        toreturn.setMessage("Notification traitee");
+        return toreturn;
     }
 
     @GetMapping("/listenotificationbyidmodule/{idmodule}")
     public List<NotificationModule> getlistenotif(@PathVariable("idmodule") Long idmodule){
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         return notificationModuleRepository.findByModule(module);
+    }
+
+    @GetMapping("/listenotificationnontraiteebyidmodule/{idmodule}")
+    public List<NotificationModule> listenotificationtraiteebyidmodule(@PathVariable("idmodule") Long idmodule){
+        ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
+        List<NotificationModule> liste = notificationModuleRepository.findByModule(module);
+        List<NotificationModule> toreturn = new ArrayList<>();
+        for(int i=0; i<liste.size(); i++){
+            if(!liste.get(i).getSeen()){
+                toreturn.add(liste.get(i));
+            }
+        }
+        return toreturn;
     }
 }
