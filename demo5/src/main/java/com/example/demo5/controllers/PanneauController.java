@@ -54,10 +54,10 @@ public class PanneauController {
         panneauDataRepository.save(panneauData);
         CouleurBoutonPanneau bouton = couleurBoutonPanneauRepository.findByModule(module);
         if(courant>0){
-            bouton.setCouleur("vert");
+            bouton.setCouleur("green");
         }
         else{
-            bouton.setCouleur("rouge");
+            bouton.setCouleur("red");
         }
         couleurBoutonPanneauRepository.save(bouton);
     }

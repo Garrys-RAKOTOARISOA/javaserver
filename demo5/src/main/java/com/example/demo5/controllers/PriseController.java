@@ -85,10 +85,10 @@
 
             CouleurBoutonPrise couleurBoutonPrise = couleurBoutonPriseRepository.findByModule(module);
             if(courant>0){
-                couleurBoutonPrise.setCouleur("vert");
+                couleurBoutonPrise.setCouleur("green");
             }
             else{
-                couleurBoutonPrise.setCouleur("rouge");
+                couleurBoutonPrise.setCouleur("red");
             }
             couleurBoutonPriseRepository.save(couleurBoutonPrise);
 

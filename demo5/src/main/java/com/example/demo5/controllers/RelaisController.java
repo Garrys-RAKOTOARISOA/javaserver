@@ -34,7 +34,7 @@ public class RelaisController {
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         RelaisBatterie relais = relaisBatterieRepository.findByModule(module);
         CouleurBoutonBatterie couleurBoutonBatterie = couleurBoutonBatterieRepository.findByModule(module);
-        if(couleurBoutonBatterie.getCouleur().equals("vert")){
+        if(couleurBoutonBatterie.getCouleur().equals("green")){
             toreturn.setMessage("Relais Batterie Eteint");
             relais.setState("HIGH");
         }
@@ -52,7 +52,7 @@ public class RelaisController {
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         RelaisPrise relais = relaisPriseRepository.findByModule(module);
         CouleurBoutonPrise couleurBoutonPrise = couleurBoutonPriseRepository.findByModule(module);
-        if(couleurBoutonPrise.getCouleur().equals("vert")){
+        if(couleurBoutonPrise.getCouleur().equals("green")){
             toreturn.setMessage("Relais prise eteint");
             relais.setState("HIGH");
         }
@@ -70,7 +70,7 @@ public class RelaisController {
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         RelaisPanneau relais = relaisPanneauRepository.findByModule(module);
         CouleurBoutonPanneau couleurBoutonPanneau = couleurBoutonPanneauRepository.findByModule(module);
-        if(couleurBoutonPanneau.getCouleur().equals("vert")){
+        if(couleurBoutonPanneau.getCouleur().equals("green")){
             toreturn.setMessage("Relais panneau eteint");
             relais.setState("HIGH");
         }

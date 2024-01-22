@@ -88,10 +88,10 @@ public class BatterieController {
 
         CouleurBoutonBatterie couleurBoutonBatterie = couleurBoutonBatterieRepository.findByModule(module);
         if(courant>0){
-            couleurBoutonBatterie.setCouleur("vert");
+            couleurBoutonBatterie.setCouleur("green");
         }
         else{
-            couleurBoutonBatterie.setCouleur("rouge");
+            couleurBoutonBatterie.setCouleur("red");
         }
         couleurBoutonBatterieRepository.save(couleurBoutonBatterie);
 
