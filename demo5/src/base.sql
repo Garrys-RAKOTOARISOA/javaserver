@@ -263,4 +263,4 @@ ALTER COLUMN state
 TYPE varchar(100);
 
 insert into planningbatterie(idmodule,datedebut,datefin,valeurenergie)
-values (1,'2024-01-22 15:50:00','2024-01-22 15:52:00',500);
+values (1,'2024-01-22 15:26:00','2024-01-22 15:30:00',500);
