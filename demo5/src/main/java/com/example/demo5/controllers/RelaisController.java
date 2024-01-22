@@ -36,11 +36,11 @@ public class RelaisController {
         CouleurBoutonBatterie couleurBoutonBatterie = couleurBoutonBatterieRepository.findByModule(module);
         if(couleurBoutonBatterie.getCouleur().equals("vert")){
             toreturn.setMessage("Relais Batterie Eteint");
-            relais.setState("LOW");
+            relais.setState("HIGH");
         }
         else {
             toreturn.setMessage("Relais Batterie Allumee");
-            relais.setState("HIGH");
+            relais.setState("LOW");
         }
         relaisBatterieRepository.save(relais);
         return toreturn;
@@ -54,11 +54,11 @@ public class RelaisController {
         CouleurBoutonPrise couleurBoutonPrise = couleurBoutonPriseRepository.findByModule(module);
         if(couleurBoutonPrise.getCouleur().equals("vert")){
             toreturn.setMessage("Relais prise eteint");
-            relais.setState("LOW");
+            relais.setState("HIGH");
         }
         else{
             toreturn.setMessage("Relais prise allumee");
-            relais.setState("HIGH");
+            relais.setState("LOW");
         }
         relaisPriseRepository.save(relais);
         return toreturn;
@@ -72,10 +72,10 @@ public class RelaisController {
         CouleurBoutonPanneau couleurBoutonPanneau = couleurBoutonPanneauRepository.findByModule(module);
         if(couleurBoutonPanneau.getCouleur().equals("vert")){
             toreturn.setMessage("Relais panneau eteint");
-            relais.setState("LOW");
+            relais.setState("HIGH");
         }
         else{
-            relais.setState("HIGH");
+            relais.setState("LOW");
             toreturn.setMessage("Relais panneau allumee");
         }
         relaisPanneauRepository.save(relais);

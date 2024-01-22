@@ -1,9 +1,6 @@
 package com.example.demo5.controllers;
 
-import com.example.demo5.models.Client;
-import com.example.demo5.models.ModuleSolar;
-import com.example.demo5.models.TypeBatterie;
-import com.example.demo5.models.UsefulEntity;
+import com.example.demo5.models.*;
 import com.example.demo5.repositories.ClientRepository;
 import com.example.demo5.repositories.ModuleSolarRepository;
 import com.example.demo5.repositories.TypeBatterieRepository;
@@ -39,13 +36,14 @@ public class GestionClientController {
     }
 
     @GetMapping("/insertclient/{nom}/{prenom}/{email}/{pass}/{codepostal}/{lienimage}/{idmodule}")
-    public void insertClient(@PathVariable("nom") String nom,
-                             @PathVariable("prenom") String prenom,
-                             @PathVariable("email") String email,
-                             @PathVariable("pass") String pass,
-                             @PathVariable("codepostal") String codepostal,
-                             @PathVariable("lienimage") String lienimage,
-                             @PathVariable("idmodule") Long idmodule){
+    public ClassSuccess insertClient(@PathVariable("nom") String nom,
+                                     @PathVariable("prenom") String prenom,
+                                     @PathVariable("email") String email,
+                                     @PathVariable("pass") String pass,
+                                     @PathVariable("codepostal") String codepostal,
+                                     @PathVariable("lienimage") String lienimage,
+                                     @PathVariable("idmodule") Long idmodule){
+        ClassSuccess toreturn = new ClassSuccess();
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         Client client = new Client();
         client.setNom(nom);
@@ -56,6 +54,8 @@ public class GestionClientController {
         client.setLienimage(lienimage);
         client.setModule(module);
         clientRepository.save(client);
+        toreturn.setMessage("Client inseree");
+        return toreturn;
     }
 
     @GetMapping("/loginclient/{email}/{password}")
