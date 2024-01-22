@@ -104,7 +104,7 @@ public class BatterieController {
                 Timestamp tempsDebut = new Timestamp(listeplanning.get(i).getDatedebut().getTime() / 1000 * 1000);
                 System.out.println("TEMPS DEBUT="+tempsDebut);
                 System.out.println("TEMPS ACTUEL="+temps);
-                if((tempsDebut.equals(temps))&&(courant==0)){
+                if((tempsDebut.equals(temps)||(temps.after(tempsDebut)&&temps.before(tempsFin)))&&(courant==0)){
                     NotificationModule notification = new NotificationModule();
                     notification.setTemps(temps);
                     notification.setTexte("Le temps de planification sur la batterie commence  a "+temps);
@@ -113,7 +113,7 @@ public class BatterieController {
                     relais.setState("LOW");
                     couleurBoutonBatterie.setCouleur("green");
                 }
-                if(tempsFin.equals(temps)&&courant!=0){
+                if((tempsFin.equals(temps)||temps.after(tempsFin))&&courant!=0){
                     NotificationModule notification = new NotificationModule();
                     notification.setTemps(temps);
                     notification.setTexte("Le temps d’utilisation planifié sur votre batterie s’est écoulé a "+temps);

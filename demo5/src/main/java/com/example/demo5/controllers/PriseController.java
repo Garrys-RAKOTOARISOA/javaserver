@@ -98,7 +98,7 @@
                 if(!listeprise.get(i).getDone()){
                     Timestamp tempsFin = new Timestamp(listeprise.get(i).getDatefin().getTime() / 1000 * 1000);
                     Timestamp tempsDebut = new Timestamp(listeprise.get(i).getDatedebut().getTime() / 1000 * 1000);
-                    if((tempsDebut.equals(temps))&&(courant==0)){
+                    if((tempsDebut.equals(temps)||(temps.after(tempsDebut)&&temps.before(tempsFin)))&&(courant==0)){
                         NotificationModule notification = new NotificationModule();
                         notification.setTemps(temps);
                         notification.setTexte("Le temps de planification sur la prise commence a "+temps);
@@ -107,7 +107,7 @@
                         relais.setState("LOW");
                         couleurBoutonPrise.setCouleur("green");
                     }
-                    if(tempsFin.equals(temps)&&courant!=0){
+                    if((tempsFin.equals(temps)||temps.after(tempsFin))&&courant!=0){
                         NotificationModule notification = new NotificationModule();
                         notification.setTemps(temps);
                         notification.setTexte("Le temps d’utilisation planifié sur votre prise s’est écoulé a "+temps);
