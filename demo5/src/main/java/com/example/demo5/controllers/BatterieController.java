@@ -97,6 +97,7 @@ public class BatterieController {
 
         RelaisBatterie relais = relaisBatterieRepository.findByModule(module);
         List<PlanningBatterie> listeplanning = planningBatterieRepository.findByModuleOrderByDatedebut(module);
+        System.out.println("TAILLE="+listeplanning.size());
         for (int i=0; i<listeplanning.size(); i++){
             if(!listeplanning.get(i).getDone()){
                 Timestamp tempsFin = new Timestamp(listeplanning.get(i).getDatefin().getTime() / 1000 * 1000);
