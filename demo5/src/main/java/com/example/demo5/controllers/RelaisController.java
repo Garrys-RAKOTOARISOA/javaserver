@@ -34,7 +34,6 @@ public class RelaisController {
         ModuleSolar module = moduleSolarRepository.findById(idmodule).orElse(null);
 
         if (module == null) {
-            // Gérer le cas où le module n'est pas trouvé
             toreturn.setMessage("Module non trouvé");
             return toreturn;
         }
@@ -63,7 +62,6 @@ public class RelaisController {
         ModuleSolar module = moduleSolarRepository.findById(idmodule).orElse(null);
 
         if (module == null) {
-            // Gérer le cas où le module n'est pas trouvé
             toreturn.setMessage("Module non trouvé");
             return toreturn;
         }
@@ -92,7 +90,6 @@ public class RelaisController {
         ModuleSolar module = moduleSolarRepository.findById(idmodule).orElse(null);
 
         if (module == null) {
-            // Gérer le cas où le module n'est pas trouvé
             toreturn.setMessage("Module non trouvé");
             return toreturn;
         }

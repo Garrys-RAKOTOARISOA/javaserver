@@ -52,14 +52,14 @@ public class PanneauController {
         panneauData.setPuissance(puissance);
         panneauData.setCourant(courant);
         panneauDataRepository.save(panneauData);
-        CouleurBoutonPanneau bouton = couleurBoutonPanneauRepository.findByModule(module);
-        if(courant>0){
-            bouton.setCouleur("green");
-        }
-        else{
-            bouton.setCouleur("red");
-        }
-        couleurBoutonPanneauRepository.save(bouton);
+//        CouleurBoutonPanneau bouton = couleurBoutonPanneauRepository.findByModule(module);
+//        if(courant>0){
+//            bouton.setCouleur("green");
+//        }
+//        else{
+//            bouton.setCouleur("red");
+//        }
+//        couleurBoutonPanneauRepository.save(bouton);
     }
 
     @GetMapping("/getTensionPanneauByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}/{seconde}")
