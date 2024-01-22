@@ -131,6 +131,8 @@
                 }
             }
             relaisPriseRepository.save(relais);
+            couleurBoutonPriseRepository.save(couleurBoutonPrise);
+
             List<ReferenceValeurPrise> referencevaleurprise = referenceValeurPriseRepository.findByDateAndModule(today, module);
             if(!referencevaleurprise.isEmpty()){
                 if(!referencevaleurprise.get(0).isDone()){
@@ -160,8 +162,6 @@
                     }
                 }
             }
-            relaisPriseRepository.save(relais);
-            couleurBoutonPriseRepository.save(couleurBoutonPrise);
         }
 
         @GetMapping("/getTensionPriseByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}/{seconde}")

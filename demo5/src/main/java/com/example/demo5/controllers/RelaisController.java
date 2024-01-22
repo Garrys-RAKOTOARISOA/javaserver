@@ -39,7 +39,7 @@ public class RelaisController {
             relais.setState("HIGH");
             couleurBoutonBatterie.setCouleur("red");
         }
-        else {
+        if(couleurBoutonBatterie.getCouleur().equals("red"))  {
             toreturn.setMessage("Relais Batterie Allumee");
             relais.setState("LOW");
             couleurBoutonBatterie.setCouleur("green");
@@ -60,7 +60,7 @@ public class RelaisController {
             relais.setState("HIGH");
             couleurBoutonPrise.setCouleur("red");
         }
-        else{
+        if(couleurBoutonPrise.getCouleur().equals("red")){
             toreturn.setMessage("Relais prise allumee");
             relais.setState("LOW");
             couleurBoutonPrise.setCouleur("green");
@@ -81,7 +81,7 @@ public class RelaisController {
             relais.setState("HIGH");
             couleurBoutonPanneau.setCouleur("red");
         }
-        else{
+        if(couleurBoutonPanneau.getCouleur().equals("red")){
             relais.setState("LOW");
             toreturn.setMessage("Relais panneau allumee");
             couleurBoutonPanneau.setCouleur("green");

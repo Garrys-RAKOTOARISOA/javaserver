@@ -139,6 +139,8 @@ public class BatterieController {
                 planningBatterieRepository.save(listeplanning.get(i));
             }
         }
+        relaisBatterieRepository.save(relais);
+        couleurBoutonBatterieRepository.save(couleurBoutonBatterie);
 
         DureeUtilisationBatterie dureeUtilisation = dureeUtilisationBatterieRepository.findByDateAndModule(todaydate, module).get(0);
         List<ReferenceDureeBatterie> referenceDureeBatterie = referenceDureeBatterieRepository.findByDateAndModule(todaydate, module);
@@ -170,8 +172,6 @@ public class BatterieController {
                 }
             }
         }
-        relaisBatterieRepository.save(relais);
-        couleurBoutonBatterieRepository.save(couleurBoutonBatterie);
     }
 
     @GetMapping("/getTensionBatterieByIdModuleAndTemps/{idmodule}/{date}/{heure}/{minute}/{seconde}")
