@@ -1,10 +1,7 @@
 package com.example.demo5.controllers;
 
 import com.example.demo5.models.*;
-import com.example.demo5.repositories.ModuleSolarRepository;
-import com.example.demo5.repositories.RelaisBatterieRepository;
-import com.example.demo5.repositories.RelaisPanneauRepository;
-import com.example.demo5.repositories.RelaisPriseRepository;
+import com.example.demo5.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,56 +12,74 @@ public class RelaisController {
     private final RelaisBatterieRepository relaisBatterieRepository;
     private final RelaisPriseRepository relaisPriseRepository;
     private final RelaisPanneauRepository relaisPanneauRepository;
+    private final CouleurBoutonPanneauRepository couleurBoutonPanneauRepository;
+    private final CouleurBoutonPriseRepository couleurBoutonPriseRepository;
+    private final CouleurBoutonBatterieRepository couleurBoutonBatterieRepository;
     private final ModuleSolarRepository moduleSolarRepository;
 
     @Autowired
-    public RelaisController(RelaisBatterieRepository relaisBatterieRepository, RelaisPriseRepository relaisPriseRepository, RelaisPanneauRepository relaisPanneauRepository, ModuleSolarRepository moduleSolarRepository){
+    public RelaisController(RelaisBatterieRepository relaisBatterieRepository, RelaisPriseRepository relaisPriseRepository, RelaisPanneauRepository relaisPanneauRepository, CouleurBoutonBatterieRepository couleurBoutonBatterieRepository, CouleurBoutonPanneauRepository couleurBoutonPanneauRepository, CouleurBoutonPriseRepository couleurBoutonPriseRepository, ModuleSolarRepository moduleSolarRepository){
         this.moduleSolarRepository = moduleSolarRepository;
         this.relaisBatterieRepository = relaisBatterieRepository;
         this.relaisPriseRepository = relaisPriseRepository;
         this.relaisPanneauRepository = relaisPanneauRepository;
+        this.couleurBoutonPanneauRepository = couleurBoutonPanneauRepository;
+        this.couleurBoutonBatterieRepository = couleurBoutonBatterieRepository;
+        this.couleurBoutonPriseRepository = couleurBoutonPriseRepository;
     }
 
     @GetMapping("/switchrelaisbatterie/{idmodule}")
-    public String switchrelaisbatterie(@PathVariable("idmodule") Long idmodule){
+    public ClassSuccess switchrelaisbatterie(@PathVariable("idmodule") Long idmodule){
+        ClassSuccess toreturn = new ClassSuccess();
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         RelaisBatterie relais = relaisBatterieRepository.findByModule(module);
-        if(relais.getState().equals("HIGH")){
+        CouleurBoutonBatterie couleurBoutonBatterie = couleurBoutonBatterieRepository.findByModule(module);
+        if(couleurBoutonBatterie.getCouleur().equals("vert")){
+            toreturn.setMessage("Relais Batterie Eteint");
             relais.setState("LOW");
         }
-        else{
+        else {
+            toreturn.setMessage("Relais Batterie Allumee");
             relais.setState("HIGH");
         }
         relaisBatterieRepository.save(relais);
-        return "Switched batterie";
+        return toreturn;
     }
 
     @GetMapping("/switchrelaisprise/{idmodule}")
-    public String switchrelaisprise(@PathVariable("idmodule") Long idmodule){
+    public ClassSuccess switchrelaisprise(@PathVariable("idmodule") Long idmodule){
+        ClassSuccess toreturn = new ClassSuccess();
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         RelaisPrise relais = relaisPriseRepository.findByModule(module);
-        if(relais.getState().equals("HIGH")){
+        CouleurBoutonPrise couleurBoutonPrise = couleurBoutonPriseRepository.findByModule(module);
+        if(couleurBoutonPrise.getCouleur().equals("vert")){
+            toreturn.setMessage("Relais prise eteint");
             relais.setState("LOW");
         }
         else{
+            toreturn.setMessage("Relais prise allumee");
             relais.setState("HIGH");
         }
         relaisPriseRepository.save(relais);
-        return "Switched prise";
+        return toreturn;
     }
 
     @GetMapping("/switchrelaispanneau/{idmodule}")
-    public String switchrelaispanneau(@PathVariable("idmodule") Long idmodule){
+    public ClassSuccess switchrelaispanneau(@PathVariable("idmodule") Long idmodule){
+        ClassSuccess toreturn = new ClassSuccess();
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
         RelaisPanneau relais = relaisPanneauRepository.findByModule(module);
-        if(relais.getState().equals("HIGH")){
+        CouleurBoutonPanneau couleurBoutonPanneau = couleurBoutonPanneauRepository.findByModule(module);
+        if(couleurBoutonPanneau.getCouleur().equals("vert")){
+            toreturn.setMessage("Relais panneau eteint");
             relais.setState("LOW");
         }
         else{
             relais.setState("HIGH");
+            toreturn.setMessage("Relais panneau allumee");
         }
         relaisPanneauRepository.save(relais);
-        return "Switched Panneau";
+        return toreturn;
     }
 
     @GetMapping("/getrelaisbatteriebyidmodule/{idmodule}")
