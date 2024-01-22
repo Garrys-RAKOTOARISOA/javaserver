@@ -1,5 +1,6 @@
 package com.example.demo5.controllers;
 
+import com.example.demo5.models.ClassSuccess;
 import com.example.demo5.models.ModuleSolar;
 import com.example.demo5.repositories.ModuleSolarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +23,13 @@ public class ModuleSolarController {
     }
 
     @GetMapping("/RedirigerWifi/{idmodule}/{ssid}/{pass}")
-    public String redirectionwifi(@PathVariable("idmodule") Long idmodule, @PathVariable("ssid") String ssid, @PathVariable("pass") String pass){
+    public ClassSuccess redirectionwifi(@PathVariable("idmodule") Long idmodule, @PathVariable("ssid") String ssid, @PathVariable("pass") String pass){
+        ClassSuccess toreturn = new ClassSuccess();
         ModuleSolar moduleSolar = moduleSolarRepository.findById(idmodule).get();
         moduleSolar.setSsid(ssid);
         moduleSolar.setPass(pass);
         moduleSolarRepository.save(moduleSolar);
-        return "Le wifi a ete redirigee vers "+ssid;
+        toreturn.setMessage("\"Le wifi a ete redirigee vers \"+ssid");
+        return toreturn;
     }
 }

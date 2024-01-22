@@ -84,11 +84,17 @@ public class ReferenceValeurController {
             if(!referenceValeurPrise.isEmpty()){
                 toreturn = referenceValeurPrise.get(0);
             }
+            if(referenceValeurPrise.isEmpty()){
+                toreturn = 0;
+            }
         }
         if(choix == 2){
             List<ReferenceValeurBatterie> referenceValeurBatterie = referenceValeurBatterieRepository.findByDateAndModule(today,module);
             if(!referenceValeurBatterie.isEmpty()){
                 toreturn = referenceValeurBatterie.get(0);
+            }
+            if(referenceValeurBatterie.isEmpty()){
+                toreturn = 0;
             }
         }
         return toreturn;

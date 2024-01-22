@@ -80,11 +80,17 @@ public class ReferenceDureeController {
             if(!referenceDureePrise.isEmpty()){
                 toreturn = referenceDureePrise.get(0);
             }
+            if(referenceDureePrise.isEmpty()){
+                toreturn = 0;
+            }
         }
-        if(choix == 2){
+        else if(choix == 2){
             List<ReferenceDureeBatterie> referenceDureeBatterie = referenceDureeBatterieRepository.findByDateAndModule(today,module);
             if(!referenceDureeBatterie.isEmpty()){
                 toreturn = referenceDureeBatterie.get(0);
+            }
+            if(referenceDureeBatterie.isEmpty()){
+                toreturn = 0;
             }
         }
         return toreturn;

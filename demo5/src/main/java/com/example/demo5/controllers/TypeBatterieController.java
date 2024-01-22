@@ -1,5 +1,6 @@
 package com.example.demo5.controllers;
 
+import com.example.demo5.models.ClassSuccess;
 import com.example.demo5.models.Client;
 import com.example.demo5.models.ModuleSolar;
 import com.example.demo5.models.TypeBatterie;
@@ -26,13 +27,15 @@ public class TypeBatterieController {
     }
 
     @GetMapping("/changertypebatterie/{idbatterie}/{idclient}")
-    public String changertypebatterie(@PathVariable("idbatterie") Long idbatterie, @PathVariable("idclient") Long idclient){
+    public ClassSuccess changertypebatterie(@PathVariable("idbatterie") Long idbatterie, @PathVariable("idclient") Long idclient){
+        ClassSuccess toreturn = new ClassSuccess();
         Client client = clientRepository.findById(idclient).get();
         ModuleSolar moduleSolar = moduleSolarRepository.findById(client.getModuleId()).get();
         TypeBatterie typeBatterie = typeBatterieRepository.findById(idbatterie).get();
         moduleSolar.setTypeBatterie(typeBatterie);
         moduleSolarRepository.save(moduleSolar);
-        return "Type Batterie changee";
+        toreturn.setMessage("Type Batterie changee");
+        return toreturn;
     }
 
     @GetMapping("/listebatterie")
