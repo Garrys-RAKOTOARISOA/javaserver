@@ -5,6 +5,7 @@ import com.example.demo5.repositories.ClientRepository;
 import com.example.demo5.repositories.ModuleSolarRepository;
 import com.example.demo5.repositories.TypeBatterieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,15 +37,21 @@ public class GestionClientController {
     }
 
     @GetMapping("/insertclient/{nom}/{prenom}/{email}/{pass}/{codepostal}/{lienimage}/{idmodule}")
-    public ClassSuccess insertClient(@PathVariable("nom") String nom,
-                                     @PathVariable("prenom") String prenom,
-                                     @PathVariable("email") String email,
-                                     @PathVariable("pass") String pass,
-                                     @PathVariable("codepostal") String codepostal,
-                                     @PathVariable("lienimage") String lienimage,
-                                     @PathVariable("idmodule") Long idmodule){
+    public ResponseEntity<?> insertClient(@PathVariable("nom") String nom,
+                                       @PathVariable("prenom") String prenom,
+                                       @PathVariable("email") String email,
+                                       @PathVariable("pass") String pass,
+                                       @PathVariable("codepostal") String codepostal,
+                                       @PathVariable("lienimage") String lienimage,
+                                       @PathVariable("idmodule") Long idmodule){
         ClassSuccess toreturn = new ClassSuccess();
         ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
+        Client clientWithModule = clientRepository.findByModuleId(idmodule).orElse(null);
+        if (clientWithModule != null){
+            RegisterFail registerFail = new RegisterFail();
+            registerFail.setMessage("cette module est déjà utilisée par un autre");
+            return ResponseEntity.ok(registerFail);
+        }
         Client client = new Client();
         client.setNom(nom);
         client.setPrenom(prenom);
@@ -55,7 +62,7 @@ public class GestionClientController {
         client.setModule(module);
         clientRepository.save(client);
         toreturn.setMessage("Client inseree");
-        return toreturn;
+        return ResponseEntity.ok(toreturn);
     }
 
     @GetMapping("/loginclient/{email}/{password}")
