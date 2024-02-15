@@ -1,5 +1,6 @@
 package com.example.demo5.controllers;
 
+import com.example.demo5.exceptions.DomainException;
 import com.example.demo5.models.*;
 import com.example.demo5.repositories.ClientRepository;
 import com.example.demo5.repositories.ModuleSolarRepository;
@@ -45,7 +46,8 @@ public class GestionClientController {
                                        @PathVariable("lienimage") String lienimage,
                                        @PathVariable("idmodule") Long idmodule){
         ClassSuccess toreturn = new ClassSuccess();
-        ModuleSolar module = moduleSolarRepository.findById(idmodule).get();
+        ModuleSolar module = moduleSolarRepository
+                .findById(idmodule).orElseThrow(() -> new DomainException("le module recherché n'existe pas"));
         Client clientWithModule = clientRepository.findByModuleId(idmodule).orElse(null);
         if (clientWithModule != null){
             RegisterFail registerFail = new RegisterFail();
