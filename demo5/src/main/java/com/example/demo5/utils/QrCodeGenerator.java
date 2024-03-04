@@ -1,5 +1,6 @@
 package com.example.demo5.utils;
 import com.example.demo5.models.ModuleSolar;
+import com.example.demo5.models.QrCodeModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.zxing.BarcodeFormat;
@@ -12,16 +13,18 @@ import lombok.var;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 
 public class QrCodeGenerator implements CodeGenerator{
+
     @Override
     public void generateCode(ModuleSolar moduleSolar) throws IOException, WriterException {
 
         ObjectMapper objectMapper = new ObjectMapper();
-        String moduleJson = objectMapper.writeValueAsString(moduleSolar);
+        String moduleJson = objectMapper.writeValueAsString(new QrCodeModel(moduleSolar));
 
         String qrCodePath = "D:\\solar-module\\QRCode\\";
-        String qrCodeName = moduleSolar.getNommodule()+moduleSolar.getId()+"-QRCODE.png";
+        String qrCodeName = moduleSolar.getNommodule() + "-QRCODE.png";
         var qrCodeWriter = new QRCodeWriter();
         BitMatrix bitMatrix = qrCodeWriter.encode(moduleJson, BarcodeFormat.QR_CODE, 400, 400);
         Path path = FileSystems.getDefault().getPath(qrCodeName);
